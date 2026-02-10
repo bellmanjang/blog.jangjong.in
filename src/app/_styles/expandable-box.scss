@@ -1,0 +1,24 @@
+.expandable-box {
+  position: relative;
+  border-radius: 0 0 var(--radius-4) var(--radius-4);
+}
+
+.expandable-box-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  padding: var(--space-3);
+  border-radius: 0 0 var(--radius-4) var(--radius-4);
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #0000, var(--white-a11) 70%);
+    opacity: 0.9;
+  }
+}
