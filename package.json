@@ -21,13 +21,11 @@
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.0",
     "rehype-katex": "^7.0.1",
-    "rehype-pretty-code": "^0.14.1",
     "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
-    "sass": "^1.97.3",
-    "shiki": "^3.22.0"
+    "sass": "^1.97.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.14",
