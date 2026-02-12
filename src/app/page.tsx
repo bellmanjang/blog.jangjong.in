@@ -1,6 +1,6 @@
-import { HeroPost } from "@/app/_components/hero-post";
-import { Posts } from "@/app/_components/posts";
-import { findAllPosts, pickHero } from "@/lib/post-api";
+import { HeroPost } from "@/app/_components/layout/hero-post";
+import { findAllPosts, pickHero } from "@/app/_features/posts/api/post-api";
+import { Posts } from "@/app/_features/posts/components/posts";
 
 export default function Page() {
     const posts = findAllPosts();

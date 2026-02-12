@@ -1,11 +1,9 @@
-export const HomeLogo = () => {
+export const ResponsiveLogo = () => {
     return (
         <>
             <svg
-                className="hidden md:block"
+                className="res-logo-text"
                 xmlns="http://www.w3.org/2000/svg"
-                width="96"
-                height="34"
                 viewBox="0 0 288 102"
                 fill="none"
             >
@@ -76,10 +74,8 @@ export const HomeLogo = () => {
             </svg>
 
             <svg
-                className="block md:hidden"
+                className="res-logo-symbol"
                 xmlns="http://www.w3.org/2000/svg"
-                width="34"
-                height="34"
                 viewBox="0 0 80 80"
                 fill="none"
             >

@@ -3,7 +3,9 @@
 > 처음 개발 시작했을 때 Jekyll(Ruby)로 블로그를 만들어서 GitHub Pages로 호스팅했었는데, 만들기만 하고 한참 방치해뒀던 기억이 납니다.  
 > Next.js로 다시 만들어 보려고 해요. 3년 만에 새로 만드는 블로그 제작기... 이번엔 꾸준히 운영할 수 있을까요?
 
-## 블로그 템플릿 살펴보기
+<br/>
+
+# 블로그 템플릿 살펴보기
 
 아래 `Next.js` 템플릿들을 참고했습니다.
 
@@ -12,7 +14,7 @@
 
 블로그 템블릿에 적용된 기능 중, 이전에는 신경쓰지 못했던 부분들이 많더라구요.
 
-### OpenGraph 이미지
+## OpenGraph 이미지
 
 OG 이미지는 소셜 미디어나 메신저에서 웹사이트 링크를 공유할 때, 미리보기에 활용되는 이미지입니다.  
 아래는 OG 이미지를 동적으로 생성하는 라우트 핸들러입니다.
@@ -39,11 +41,9 @@ export async function GET(
 }
 ```
 
-<img src="public/images/집-짓는-중입니다-img-01.png" width="50%" />
+<img src="/public/images/집-짓는-중입니다-img-01.png" width="50%" title="이런 식으로 포스팅마다 동적으로 생성됩니다." />
 
-이런 식으로 포스팅마다 동적으로 생성됩니다.
-
-### JSON-LD
+## JSON-LD
 
 웹페이지의 데이터를 JSON 기반으로 구조화하여, 검색 엔진이 웹페이지의 콘텐츠를 더 잘 이해하도록 돕는 마크업 언어라고 합니다.
 JSON 기반이라 읽기 쉽고, 기존 메타 태그 방식보다 유지 보수가 쉬운 장점이 있습니다.
@@ -74,7 +74,7 @@ JSON 기반이라 읽기 쉽고, 기존 메타 태그 방식보다 유지 보수
 
 <br/>
 
-## Markdown 기반 블로그
+# Markdown 기반 블로그
 
 블로그 글은 .md 파일로 관리하기로 했습니다. 렌더링/에디터 라이브러리 종속성을 최소화하는 방향으로 가고 싶었어요.  
 또한 글을 데이터로 관리하면 글만 따로 모아 별도의 리포지토리에서 관리할 수 있고, 마이그레이션/재사용에 용이하기 때문입니다.
@@ -85,24 +85,254 @@ Markdown 렌더링 라이브러리는 <a href="https://github.com/remarkjs/react
 
 <br/>
 
-## TO-DO
+# 공통 렌더링 블록 컴포넌트로 분리
 
-- [ ] 공통 렌더링 블록 컴포넌트로 분리
+아래는 블록 컴포넌트 중 Headings과 Link의 코드입니다.  
+Headings에는 anchor(#)를 추가했는데, 이 때 사용되는 id를 주입하기 위해 플러그인을 작성했습니다.  
+Link는 App route, Headings anchor를 먼저 처리하고 그 외의 경우 새 탭에서 열리도록 설정했습니다.
+
+```typescript jsx
+// @/app/_components/markdown/renderers/headings.tsx
+export const createHeadingRenderer = (
+    level: 1 | 2 | 3 | 4 | 5 | 6,
+): Components[typeof tagName] => {
+    const tagName = `h${level}` as const;
+
+    return props => {
+        const { node, color, children, ...rest } = props;
+
+        return (
+            <Heading as={tagName} {...rest}>
+                <span className="relative">
+                    <Link className="md-anchor" href={`#${props.id}`} />
+                    {children}
+                </span>
+            </Heading>
+        );
+    };
+};
+
+// @/app/_components/markdown/renderers/link.tsx
+export const linkRenderer: Components["a"] = props => {
+    const { node, color, children, href, ...rest } = props;
+
+    if (!href) return <Text {...rest}>{children}</Text>;
+
+    // App route
+    if (href.startsWith("/")) {
+        return (
+            <RadixLink asChild>
+                <Link href={href} {...rest}>
+                    {props.target === "_blank" && (
+                        <ArrowUpRight
+                            className={"open-in-new-tab"}
+                            strokeLinecap={"butt"}
+                        />
+                    )}
+                    {children}
+                </Link>
+            </RadixLink>
+        );
+    }
+
+    // Headings anchor
+    if (href.startsWith("#")) {
+        return <RadixLink {...rest}>{children}</RadixLink>;
+    }
+
+    // fallback
+    return (
+        <RadixLink
+            href={href}
+            {...rest}
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <ArrowUpRight
+                className={"open-in-new-tab"}
+                strokeLinecap={"butt"}
+            />
+            {children}
+        </RadixLink>
+    );
+};
+```
+
+AST 트리를 탐색하면서 h1~6 태그에 중복 방지 처리된 id를 주입하는 플러그인 코드입니다.
+
+```typescript
+import type { Element, Root } from "hast";
+import type { Plugin } from "unified";
+
+function slugify(str: any) {
+    return str
+        .toString()
+        .toLowerCase()
+        .trim() // Remove whitespace from both ends of a string
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/&/g, "-and-") // Replace & with 'and'
+        .replace(/[^\w[가-힣]-]+/g, "") // Remove all non-word characters except for -
+        .replace(/--+/g, "-"); // Replace multiple - with single -
+}
+
+function getTextContent(node: any): string {
+    if (!node) return "";
+    if (node.type === "text") return node.value ?? "";
+    if (Array.isArray(node.children)) {
+        return node.children.map(getTextContent).join("");
+    }
+    return "";
+}
+
+const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
+
+export const rehypeHeadingId: Plugin<[], Root> = () => {
+    const used = new Set<string>();
+
+    return tree => {
+        // DFS
+        const walk = (node: any) => {
+            if (!node) return;
+
+            if (node.type === "element") {
+                const el = node as Element;
+
+                if (HEADING_TAGS.has(el.tagName)) {
+                    const rawText = getTextContent(el);
+                    const base = slugify(rawText) || "section";
+
+                    let id = base;
+                    let i = 2;
+
+                    while (used.has(id)) {
+                        id = `${base}-${i++}`;
+                    }
+                    
+                    used.add(id);
+
+                    el.properties ??= {};
+                    (el.properties as any).id = id;
+                }
+            }
+
+            if (Array.isArray(node.children)) {
+                for (const child of node.children) walk(child);
+            }
+        };
+
+        walk(tree);
+    };
+};
+```
+
+Unordred list의 마커가 depth에 따라 ● -> ○ -> ■ -> □ 순으로 순환하도록 하기 위해 depth를 주입하는 플러그인 코드입니다.
+
+```typescript
+import type { Element, Root } from "hast";
+import type { Plugin } from "unified";
+
+type Options = {
+    modulo?: number; // depth % modulo
+    attribute?: string; // data-*
+    includeOrdered?: boolean;
+    includeUnordered?: boolean;
+};
+
+export const rehypeListDepth: Plugin<[Options?], Root> = opts => {
+    const {
+        modulo = 4,
+        attribute = "data-depth",
+        includeOrdered = true,
+        includeUnordered = true,
+    } = opts ?? {};
+
+    return tree => {
+        // DFS
+        const walk = (node: any, listDepth: number) => {
+            if (!node) return;
+
+            const isElement = node.type === "element";
+            const tag = isElement ? (node as Element).tagName : null;
+
+            const isUl = tag === "ul";
+            const isOl = tag === "ol";
+            const isList =
+                (includeUnordered && isUl) || (includeOrdered && isOl);
+
+            let nextDepth = listDepth;
+
+            if (isList) {
+                const depthMod = ((listDepth % modulo) + modulo) % modulo;
+
+                const el = node as Element;
+                el.properties ??= {};
+                (el.properties as any)[attribute] = String(depthMod);
+
+                nextDepth = listDepth + 1;
+            }
+
+            if (Array.isArray(node.children)) {
+                for (const child of node.children) walk(child, nextDepth);
+            }
+        };
+
+        walk(tree, 0);
+    };
+};
+```
+
+아래는 현재 적용된 플러그인과 컴포넌트들입니다.
+
+```typescript
+export const markdownOptions: Pick<
+    Options,
+    "remarkPlugins" | "rehypePlugins" | "components"
+> = {
+    remarkPlugins: [remarkGfm, remarkMath],
+    rehypePlugins: [rehypeRaw, rehypeKatex, rehypeHeadingId, rehypeListDepth],
+    components: {
+        h1: createHeadingRenderer(1),
+        h2: createHeadingRenderer(2),
+        h3: createHeadingRenderer(3),
+        h4: createHeadingRenderer(4),
+        h5: createHeadingRenderer(5),
+        h6: createHeadingRenderer(6),
+        a: linkRenderer,
+        p: paragraphRenderer,
+        blockquote: blockquoteRenderer,
+        code: codeRenderer,
+        img: imgRenderer,
+        input: inputRenderer, // Task list items checkbox
+        table: tableRenderer.table,
+        thead: tableRenderer.thead,
+        tbody: tableRenderer.tbody,
+        tr: tableRenderer.tr,
+        th: tableRenderer.th,
+        td: tableRenderer.td,
+    },
+};
+```
+
+<br/>
+
+# TO-DO
+
+- [x] 공통 렌더링 블록 컴포넌트로 분리
     - <a href="https://spec.commonmark.org/current/" target="_blank">CommonMark</a>
-        - Thematic breaks
-        - ATX headings
-        - Paragraphs
-        - Block quotes
-        - Lists
-        - Code spans
-        - Links
-        - Images
-        - Autolinks
+        - [x] Thematic breaks
+        - [x] ATX headings
+        - [x] Paragraphs
+        - [x] Block quotes
+        - [x] Lists
+        - [x] Code spans
+        - [x] Links
+        - [x] Images
+        - [x] Autolinks
     - <a href="https://github.github.com/gfm/" target="_blank">GFM(GitHub Flavored Markdown)</a>
-        - Tables
-        - Task list items
-        - Strikethrough
-        - Autolinks
+        - [x] Tables
+        - [x] Task list items
+        - [x] Strikethrough
+        - [x] Autolinks
 - [ ] CodeSandbox 블록
 - [ ] TOC(Table of Contents) 사이드바
 - [ ] 검색

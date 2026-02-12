@@ -9,7 +9,7 @@ export const imgRenderer: Components["img"] = props => {
 
     return (
         <span
-            className="my-4 flex flex-col border border-[var(--accent-a8)] p-1.5"
+            className="md-image"
             style={{
                 width: width || undefined,
                 maxWidth: "100%",
@@ -17,12 +17,15 @@ export const imgRenderer: Components["img"] = props => {
             }}
         >
             <Image
-                className="md-image h-full w-full"
                 src={src}
                 alt={alt ?? ""}
                 width={0}
                 height={0}
                 sizes={"100vw"}
+                style={{
+                    width: "100%",
+                    height: "100%",
+                }}
             />
             {title && (
                 <Text

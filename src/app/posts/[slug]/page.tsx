@@ -2,9 +2,13 @@ import { Text } from "@radix-ui/themes";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { Markdown } from "@/app/_components/md";
-import { formatDate } from "@/lib/date-util";
-import { buildJsonLd, findAllPosts, getPostBySlug } from "@/lib/post-api";
+import { Markdown } from "@/app/_components/markdown/md";
+import {
+    buildJsonLd,
+    findAllPosts,
+    getPostBySlug,
+} from "@/app/_features/posts/api/post-api";
+import { formatDate } from "@/lib/utils/date-util";
 
 const getCachedPostBySlug = cache(getPostBySlug);
 

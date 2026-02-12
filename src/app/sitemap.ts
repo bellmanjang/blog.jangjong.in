@@ -1,4 +1,4 @@
-import { findAllPosts } from "@/lib/post-api";
+import { findAllPosts } from "@/app/_features/posts/api/post-api";
 
 export default async function sitemap() {
     const posts = findAllPosts().map(post => ({

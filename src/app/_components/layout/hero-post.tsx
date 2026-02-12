@@ -1,7 +1,7 @@
 import { Box, Grid, Text } from "@radix-ui/themes";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Markdown } from "@/app/_components/md";
+import { Markdown } from "@/app/_components/markdown/md";
 import type { Post } from "@/interfaces/post";
 
 export function HeroPost({ slug, title, content }: Post) {

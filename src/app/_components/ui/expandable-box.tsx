@@ -8,7 +8,7 @@ export const ExpandableBox = ({ children }: PropsWithChildren) => {
 
     return (
         <Grid
-            className="expandable-box relative"
+            className="expandable-box"
             rows={expanded ? "1fr" : "160px"}
             minHeight="160px"
             maxHeight="70dvh"
@@ -25,12 +25,12 @@ export const ExpandableBox = ({ children }: PropsWithChildren) => {
                     justify="center"
                     align="end"
                 >
-                    <Box className="relative bg-white">
+                    <Box>
                         <Button
-                            className="!pointer-events-auto"
                             size="1"
+                            color="gray"
                             highContrast
-                            variant="soft"
+                            variant="outline"
                             onClick={() => setExpanded(cur => !cur)}
                         >
                             <Text weight="bold">
