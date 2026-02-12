@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
@@ -45,14 +46,16 @@ export function buildJsonLd(post: Post) {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         headline: post.title,
-        datePublished: post.publishedAt,
-        dateModified: post.lastModifiedAt,
+        datePublished: parseISO(post.publishedAt).toISOString(),
+        dateModified: parseISO(post.lastModifiedAt).toISOString(),
         description: post.summary,
         image: `${process.env.BASE_URL}/og/posts/${post.slug}`,
         url: `${process.env.BASE_URL}/posts/${post.slug}`,
         author: {
             "@type": "Person",
             name: "Jang Jong-in",
+            alternateName: "장종인",
+            url: "https://jangjong.in",
         },
     });
 }

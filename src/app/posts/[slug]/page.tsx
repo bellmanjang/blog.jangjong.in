@@ -1,4 +1,5 @@
 import { Text } from "@radix-ui/themes";
+import { parseISO } from "date-fns";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -62,7 +63,7 @@ export async function generateMetadata(
 
     if (!post) return notFound();
 
-    const { title, summary, publishedAt } = post;
+    const { title, summary, publishedAt, lastModifiedAt } = post;
 
     const ogImageUrl = `${process.env.BASE_URL}/og/posts/${post.slug}`;
     const previousImages = (await parent).openGraph?.images || [];
@@ -74,7 +75,8 @@ export async function generateMetadata(
             title,
             description: summary,
             type: "article",
-            publishedTime: publishedAt,
+            publishedTime: parseISO(publishedAt).toISOString(),
+            modifiedTime: parseISO(lastModifiedAt).toISOString(),
             url: `${process.env.BASE_URL}/posts/${post.slug}`,
             images: [
                 {
