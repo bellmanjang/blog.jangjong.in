@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { formatDate } from "@/lib/date-util";
-import { getPostBySlug } from "@/lib/post-api";
+import { getPostBySlug } from "@/app/_features/posts/api/post-api";
+import { formatDate } from "@/lib/utils/date-util";
 
 export async function GET(
     _req: NextRequest,

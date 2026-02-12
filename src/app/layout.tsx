@@ -1,12 +1,13 @@
-import "./global.css";
+import "./_styles/reset.css";
+import "./_styles/global.scss";
 import { ScrollArea, Theme } from "@radix-ui/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
-import { Navbar } from "@/app/_components/nav";
-import { cx } from "@/lib/class-util";
+import { Navbar } from "@/app/_components/layout/navbar";
+import { cx } from "@/lib/utils/class-util";
 
 const pretendard = localFont({
     src: "../../public/fonts/Pretendard/PretendardVariable.woff2",
@@ -58,7 +59,12 @@ export default function RootLayout({
                 />
             </head>
             <body>
-                <ThemeProvider attribute="class">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
                     <Theme
                         className={cx(
                             pretendard.variable,
@@ -67,8 +73,13 @@ export default function RootLayout({
                         accentColor={"grass"}
                         radius={"none"}
                     >
-                        <ScrollArea className="!h-dvh" size="2">
-                            <main className="relative flex h-full w-full max-w-4xl flex-auto flex-col px-5 pt-8 pb-16 lg:mx-auto">
+                        <ScrollArea
+                            className="max-h-dvh"
+                            type="auto"
+                            scrollbars="vertical"
+                            size="2"
+                        >
+                            <main className="layout-main">
                                 <Navbar />
                                 {children}
                                 <Analytics />

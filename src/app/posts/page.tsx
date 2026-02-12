@@ -1,5 +1,5 @@
-import { Posts } from "@/app/_components/posts";
-import { findAllPosts } from "@/lib/post-api";
+import { findAllPosts } from "@/app/_features/posts/api/post-api";
+import { Posts } from "@/app/_features/posts/components/posts";
 
 export const metadata = {
     title: "Posts",

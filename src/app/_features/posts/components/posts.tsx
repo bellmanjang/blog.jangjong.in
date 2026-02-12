@@ -1,7 +1,7 @@
 import { Text } from "@radix-ui/themes";
 import Link from "next/link";
 import type { Post } from "@/interfaces/post";
-import { formatDate } from "@/lib/date-util";
+import { formatDate } from "@/lib/utils/date-util";
 
 export function Posts({ posts }: { posts: Post[] }) {
     return (
