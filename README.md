@@ -58,14 +58,16 @@ JSON 기반이라 읽기 쉽고, 기존 메타 태그 방식보다 유지 보수
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             headline: post.title,
-            datePublished: post.publishedAt,
-            dateModified: post.lastModifiedAt,
+            datePublished: parseISO(post.publishedAt).toISOString(),
+            dateModified: parseISO(post.lastModifiedAt).toISOString(),
             description: post.summary,
             image: `${process.env.BASE_URL}/og/posts/${post.slug}`,
             url: `${process.env.BASE_URL}/posts/${post.slug}`,
             author: {
                 "@type": "Person",
                 name: "Jang Jong-in",
+                alternateName: "장종인",
+                url: "https://jangjong.in",
             },
         })
     }}
