@@ -26,6 +26,7 @@ export const imgRenderer: Components["img"] = props => {
                     width: "100%",
                     height: "100%",
                 }}
+                tabIndex={0}
             />
             {title && (
                 <Text
@@ -33,6 +34,7 @@ export const imgRenderer: Components["img"] = props => {
                     size="2"
                     color="gray"
                     wrap="wrap"
+                    tabIndex={0}
                 >
                     {title}
                 </Text>

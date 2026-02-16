@@ -1,201 +1,254 @@
 @use "../tokens/variables" as v;
+
 @reference "tailwindcss";
 
 .prose {
-  --code-block-bg: var(--gray-a3);
-  --border-gray: var(--gray-a6);
+    --block-wrapper-bg: var(--gray-4);
+    --fenced-code-bg: var(--gray-2);
+    --border-gray: var(--gray-a6);
+
+    @apply px-6;
 }
 
 /* Thematic breaks */
 .prose hr {
-  @apply h-1 my-6 p-0 border-0 bg-[var(--border-gray)];
+    @apply h-1 my-6 p-0 border-0 bg-[var(--border-gray)];
 }
 
 /* ATX headings */
 .prose h1 {
-  @apply text-4xl tracking-tight mt-6 mb-4;
+    @apply text-4xl tracking-tight mt-6 mb-4;
 }
 
 .prose h2 {
-  @apply text-3xl tracking-tight mt-6 mb-4;
+    @apply text-3xl tracking-tight mt-6 mb-4;
 }
 
 .prose h3 {
-  @apply text-2xl tracking-tight mt-6 mb-4;
+    @apply text-2xl tracking-tight mt-6 mb-4;
 }
 
 .prose h4 {
-  @apply text-xl tracking-tight mt-6 mb-4;
+    @apply text-xl tracking-tight mt-6 mb-4;
 }
 
 .prose h5 {
-  @apply text-lg tracking-tight mt-6 mb-4;
+    @apply text-lg tracking-tight mt-6 mb-4;
 }
 
 .prose h6 {
-  @apply text-base tracking-tight mt-6 mb-4;
+    @apply text-base tracking-tight mt-6 mb-4;
 }
 
-.prose [id] {
-  scroll-margin-top: v.$navbar-h;
+.prose .headings {
+    @apply inline-block;
+
+    scroll-margin-top: v.$navbar-h;
 }
 
 .prose .md-anchor {
-  @apply invisible absolute -ml-[1em] no-underline text-[var(--border-gray)];
+    @apply invisible absolute -ml-[1ch] no-underline text-[var(--border-gray)];
 
-  width: calc(100% + 1em);
+    width: calc(100% + 1ch);
 
-  &:after {
-    content: "#";
-  }
-
-  &:hover {
-    .prose p {
-      @apply my-4 text-neutral-800 dark:text-neutral-200;
+    &:after {
+        content: "#";
     }
 
-    @apply visible;
-  }
+    &:hover {
+        .prose p {
+            @apply my-4 text-neutral-800 dark:text-neutral-200;
+        }
+
+        @apply visible;
+    }
 }
 
-.prose *:hover > .md-anchor {
-  @apply visible;
+.prose .headings:hover .md-anchor {
+    @apply visible;
+}
+
+.prose .headings:focus-visible .md-anchor {
+    @apply visible;
 }
 
 /* Paragraphs */
 .prose p {
-  @apply mb-4;
+    @apply mb-4;
 }
 
 /* Block quotes */
 .prose blockquote {
-  @apply mb-4;
+    @apply mb-4;
 }
 
 /* Lists */
-.prose ol, ul {
-  @apply m-0 pl-5;
+.prose ol,
+ul {
+    @apply m-0 pl-5;
 
-  &[data-depth="0"] {
-    @apply mb-4;
-  }
+    &[data-depth="0"] {
+        @apply mb-4;
+    }
 }
 
 .prose ol {
-  @apply list-decimal;
+    @apply list-decimal;
 }
 
 .prose ul {
-  @apply list-none;
+    @apply list-none;
 
-  & > li {
-    @apply relative pl-1;
-  }
-  & > li:not(.task-list-item)::before {
-    @apply absolute -left-6 top-0 w-6 h-6 bg-current;
-  }
+    & > li {
+        @apply relative pl-1;
+    }
 
-  &[data-depth="0"] > li:not(.task-list-item)::before {
-    content: "";
-    mask: url('disc.svg') no-repeat center / contain;
-  }
+    & > li:not(.task-list-item)::before {
+        @apply absolute -left-6 top-0 w-6 h-6 bg-current;
+    }
 
-  &[data-depth="1"] > li:not(.task-list-item)::before {
-    content: "";
-    mask: url('circle.svg') no-repeat center / contain;
-  }
+    &[data-depth="0"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("disc.svg") no-repeat center / contain;
+    }
 
-  &[data-depth="2"] > li:not(.task-list-item)::before {
-    content: "";
-    mask: url('square.svg') no-repeat center / contain;
-  }
+    &[data-depth="1"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("circle.svg") no-repeat center / contain;
+    }
 
-  &[data-depth="3"] > li:not(.task-list-item)::before {
-    content: "";
-    mask: url('box.svg') no-repeat center / contain;
-  }
+    &[data-depth="2"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("square.svg") no-repeat center / contain;
+    }
+
+    &[data-depth="3"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("box.svg") no-repeat center / contain;
+    }
 }
 
-/* Code spans */
-.prose pre {
-  @apply mb-4 p-1 border border-[var(--accent-a8)] text-sm bg-[var(--code-block-bg)];
+/* Fenced code */
+.prose .md-fenced-code {
+    @apply relative h-full p-1 border border-[var(--accent-a8)] bg-[var(--block-wrapper-bg)];
 }
 
-.prose pre .md-code-block {
-  @apply relative;
+.prose > .md-fenced-code {
+    @apply mb-4;
 }
 
-.prose pre .md-code-block .md-code-copy-btn {
-  @apply cursor-pointer absolute top-0 right-0 z-10;
+.prose .md-fenced-code .md-code-copy-btn-wrapper {
+    @apply absolute top-2 right-2 z-10 bg-[var(--gray-1)];
 }
 
+.prose .md-fenced-code .md-pre-wrapper {
+    @apply relative h-full text-sm font-mono font-medium bg-[var(--fenced-code-bg)];
+
+    padding: 0 v.$expandable-box-gradient-h v.$expandable-box-gradient-h 0 !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(v.$code-linenumber-pl + var(--ln-width) + v.$code-linenumber-pr);
+        width: 1px;
+        background-color: var(--border-gray);
+        pointer-events: none;
+    }
+}
+
+.prose .md-fenced-code pre {
+    @apply w-full h-full !overflow-visible;
+
+    padding: 0 !important;
+    outline-offset: -1px;
+}
+
+.prose .md-fenced-code pre > code {
+    @apply inline-block w-full h-full;
+}
+
+.prose .md-fenced-code pre > code span.linenumber {
+    min-width: calc(v.$code-linenumber-pl + var(--ln-width) + v.$code-linenumber-pr) !important;
+    padding-left: v.$code-linenumber-pl !important;
+    padding-right: v.$code-linenumber-pr !important;
+    margin-right: 0.5ch;
+}
+
+/* Inline code */
 .prose .md-inline-code {
-  @apply p-1 bg-[var(--code-block-bg)];
+    @apply p-1 bg-[var(--block-wrapper-bg)] text-sm font-mono font-medium;
 }
 
 /* Links */
-.prose a {
-  @apply underline transition-all decoration-[var(--border-gray)] underline-offset-2 decoration-[0.1em];
+.prose .md-link {
+    @apply underline decoration-[var(--border-gray)] underline-offset-2 decoration-[0.1em];
 
-  .open-in-new-tab {
-    @apply inline-block align-middle;
+    & .open-in-new-tab {
+        @apply inline-block align-middle;
 
-    transform: translate(0);
-  }
+        transform: translate(0);
+    }
 }
 
-.prose a:hover {
-  @apply decoration-current;
-
-  .open-in-new-tab {
-    transform: translate(1px, -1px);
-  }
+.prose .md-link:hover {
+    & .open-in-new-tab {
+        transform: translate(0.075em, -0.075em);
+    }
 }
 
 /* Images */
 .prose .md-image {
-  @apply flex flex-col mb-4 p-1 bg-[var(--code-block-bg)];
+    @apply flex flex-col mb-4 p-1 bg-[var(--block-wrapper-bg)];
 }
 
 .prose .md-image-caption {
-  @apply flex w-full overflow-hidden;
+    @apply flex w-full overflow-hidden;
 
-  max-height: 0;
-  margin-top: 0;
-  opacity: 0;
-  transform: translateY(-2px);
+    max-height: 0;
+    margin-top: 0;
+    opacity: 0;
+    transform: translateY(-2px);
 
-  transition: max-height 200ms ease,
-  margin-top 200ms ease,
-  opacity 200ms ease,
-  transform 200ms ease;
+    transition: max-height 200ms ease,
+    margin-top 200ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
 }
 
 .prose .md-image:hover > .md-image-caption {
-  max-height: fit-content;
-  margin-top: 4px;
-  opacity: 1;
-  transform: translateY(0);
+    max-height: fit-content;
+    margin-top: 4px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.prose .md-image > .md-image-caption:focus-visible {
+    max-height: fit-content;
+    margin-top: 4px;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Tables */
 .prose .md-table {
-  @apply inline-block mb-4 p-1 bg-[var(--code-block-bg)];
+    @apply inline-block mb-4 p-1 bg-[var(--block-wrapper-bg)];
 }
 
 /* Task list items */
 .prose .md-checkbox {
-  @apply pointer-events-none cursor-default absolute top-0 -left-6 w-6 h-6 flex items-center justify-center;
+    @apply pointer-events-none absolute top-0 -left-6 w-6 h-6 flex items-center justify-center;
 }
 
 /* Remove Safari input shadow on mobile */
 .prose input[type="text"],
 input[type="email"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .prose > :last-child {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }

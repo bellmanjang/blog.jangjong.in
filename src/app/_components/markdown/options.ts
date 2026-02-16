@@ -5,20 +5,23 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { rehypeHeadingId } from "@/app/_components/markdown/rehype-heading-id";
 import { rehypeListDepth } from "@/app/_components/markdown/rehype-list-depth";
+import { remarkSandpack } from "@/app/_components/markdown/remark-sandpack";
 import { blockquoteRenderer } from "@/app/_components/markdown/renderers/blockquote";
-import { codeRenderer } from "@/app/_components/markdown/renderers/code";
+import { preRenderer } from "@/app/_components/markdown/renderers/fenced-code";
 import { createHeadingRenderer } from "@/app/_components/markdown/renderers/headings";
 import { imgRenderer } from "@/app/_components/markdown/renderers/img";
+import { inlineCodeRenderer } from "@/app/_components/markdown/renderers/inline-code";
 import { inputRenderer } from "@/app/_components/markdown/renderers/input";
 import { linkRenderer } from "@/app/_components/markdown/renderers/link";
 import { paragraphRenderer } from "@/app/_components/markdown/renderers/paragraph";
+import { sandpackRenderer } from "@/app/_components/markdown/renderers/sandpack";
 import { tableRenderer } from "@/app/_components/markdown/renderers/table";
 
 export const markdownOptions: Pick<
     Options,
     "remarkPlugins" | "rehypePlugins" | "components"
 > = {
-    remarkPlugins: [remarkGfm, remarkMath],
+    remarkPlugins: [remarkGfm, remarkMath, remarkSandpack],
     rehypePlugins: [rehypeRaw, rehypeKatex, rehypeHeadingId, rehypeListDepth],
     components: {
         h1: createHeadingRenderer(1),
@@ -30,7 +33,8 @@ export const markdownOptions: Pick<
         a: linkRenderer,
         p: paragraphRenderer,
         blockquote: blockquoteRenderer,
-        code: codeRenderer,
+        code: inlineCodeRenderer,
+        pre: preRenderer,
         img: imgRenderer,
         input: inputRenderer, // Task list items checkbox
         table: tableRenderer.table,
@@ -39,5 +43,6 @@ export const markdownOptions: Pick<
         tr: tableRenderer.tr,
         th: tableRenderer.th,
         td: tableRenderer.td,
+        sandpack: sandpackRenderer,
     },
 };

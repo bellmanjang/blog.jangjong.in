@@ -1,24 +1,24 @@
+@use "../tokens/variables" as v;
+
 @reference "tailwindcss";
 
 .expandable-box {
-  @apply relative;
+    @apply relative;
 }
 
 .expandable-box-gradient {
-  @apply absolute bottom-0 left-0 right-0 h-[80px] p-[var(--space-3)];
+    @apply absolute bottom-0 left-0 right-0 p-[var(--space-3)];
 
-  &:before {
-    @apply pointer-events-none absolute inset-0 opacity-90;
+    height: v.$expandable-box-gradient-h;
 
-    content: '';
-    background: linear-gradient(180deg, #0000, var(--gray-1) 70%);
-  }
+    &:before {
+        @apply pointer-events-none absolute inset-0 opacity-90;
 
-  & > div {
-    @apply relative bg-[var(--gray-1)];
-
-    & > button {
-      @apply pointer-events-auto cursor-pointer;
+        content: "";
+        background: linear-gradient(180deg, #0000, var(--gray-1) 70%);
     }
-  }
+}
+
+.expand-btn-wrapper {
+    @apply pointer-events-auto relative bg-[var(--gray-1)];
 }

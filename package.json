@@ -1,7 +1,7 @@
 {
   "name": "blog.jangjong.in",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +10,8 @@
     "lint:fix": "biome check --write --diagnostic-level=error"
   },
   "dependencies": {
-    "@types/hast": "^3.0.4",
+    "@codesandbox/sandpack-client": "^2.19.8",
+    "@codesandbox/sandpack-react": "^2.20.0",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.563.0",
@@ -28,12 +29,15 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "sass": "^1.97.3",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.14",
     "@radix-ui/themes": "^3.3.0",
     "@tailwindcss/postcss": "^4.1.18",
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

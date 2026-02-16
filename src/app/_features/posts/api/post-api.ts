@@ -2,26 +2,29 @@ import { parseISO } from "date-fns";
 import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
+import { cache } from "react";
 import type { Post } from "@/interfaces/post";
+import { safeDecodeURIComponent } from "@/lib/utils/util";
 
 const postsDirectory = path.join(process.cwd(), "_posts");
 
-export function getPostSlugs() {
+function getPostSlugs() {
     return fs
         .readdirSync(postsDirectory)
         .filter(file => path.extname(file) === ".md");
 }
 
-export function getPostBySlug(slug: string): Post {
-    const realSlug = slug.replace(/\.md$/, "");
+export const getPostBySlug = cache((slug: string): Post => {
+    const decoded = safeDecodeURIComponent(slug);
+    const realSlug = decoded.replace(/\.md$/, "");
     const fullPath = path.join(postsDirectory, `${realSlug}.md`);
     const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
 
     return { ...data, slug: realSlug, content } as Post;
-}
+});
 
-export function findAllPosts() {
+export const findAllPosts = cache(() => {
     const slugs = getPostSlugs();
 
     return (
@@ -32,7 +35,7 @@ export function findAllPosts() {
                 post1.publishedAt > post2.publishedAt ? -1 : 1,
             )
     );
-}
+});
 
 export function pickHero(posts: Post[]) {
     if (posts.length === 0) return { hero: null, rest: [] };
@@ -42,6 +45,8 @@ export function pickHero(posts: Post[]) {
 }
 
 export function buildJsonLd(post: Post) {
+    const encodedSlug = encodeURIComponent(post.slug);
+
     return JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -49,8 +54,8 @@ export function buildJsonLd(post: Post) {
         datePublished: parseISO(post.publishedAt).toISOString(),
         dateModified: parseISO(post.lastModifiedAt).toISOString(),
         description: post.summary,
-        image: `${process.env.BASE_URL}/og/posts/${post.slug}`,
-        url: `${process.env.BASE_URL}/posts/${post.slug}`,
+        image: `${process.env.BASE_URL}/og/posts/${encodedSlug}`,
+        url: `${process.env.BASE_URL}/posts/${encodedSlug}`,
         author: {
             "@type": "Person",
             name: "Jang Jong-in",

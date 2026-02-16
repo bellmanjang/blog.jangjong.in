@@ -1,22 +1,32 @@
 import { Heading } from "@radix-ui/themes";
 import Link from "next/link";
 import type { Components } from "react-markdown";
+import { cx } from "@/lib/utils/class-util";
 
-export const createHeadingRenderer = (
+export function createHeadingRenderer(
     level: 1 | 2 | 3 | 4 | 5 | 6,
-): Components[typeof tagName] => {
+): Components[typeof tagName] {
     const tagName = `h${level}` as const;
 
     return props => {
-        const { node, color, children, ...rest } = props;
+        const { node, color, children, className, ...rest } = props;
 
         return (
-            <Heading as={tagName} {...rest}>
+            <Heading
+                as={tagName}
+                className={cx("headings", className)}
+                {...rest}
+                tabIndex={0}
+            >
                 <span className="relative">
-                    <Link className="md-anchor" href={`#${props.id}`} />
+                    <Link
+                        className="md-anchor"
+                        href={`#${props.id}`}
+                        tabIndex={-1}
+                    />
                     {children}
                 </span>
             </Heading>
         );
     };
-};
+}

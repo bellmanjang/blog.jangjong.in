@@ -10,6 +10,7 @@
         "includes": [
             "./src/**",
             "!**/*.css",
+            "!**/*.scss",
             "!**/build",
             "!**/coverage",
             "!**/out",
@@ -83,7 +84,7 @@
                     "fix": "safe",
                     "options": {
                         "attributes": ["className"],
-                        "functions": ["cn", "clsx"]
+                        "functions": ["cx", "clsx"]
                     }
                 }
             },

@@ -4,6 +4,7 @@ import { ScrollArea, Theme } from "@radix-ui/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import { Inconsolata } from "next/font/google";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 import { Navbar } from "@/app/_components/layout/navbar";
@@ -11,7 +12,11 @@ import { cx } from "@/lib/utils/class-util";
 
 const pretendard = localFont({
     src: "../../public/fonts/Pretendard/PretendardVariable.woff2",
-    variable: "--font-Pretendard",
+    variable: "--font-pretendard",
+    display: "swap",
+});
+const inconsolata = Inconsolata({
+    variable: "--font-inconsolata",
     display: "swap",
 });
 
@@ -49,7 +54,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="ko" suppressHydrationWarning>
+        <html
+            lang="ko"
+            suppressHydrationWarning
+            className={cx(
+                pretendard.variable,
+                inconsolata.variable,
+                "font-sans",
+            )}
+        >
             <head>
                 <link
                     rel="stylesheet"
@@ -66,10 +79,7 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <Theme
-                        className={cx(
-                            pretendard.variable,
-                            pretendard.className,
-                        )}
+                        id="theme-root"
                         accentColor={"grass"}
                         radius={"none"}
                     >

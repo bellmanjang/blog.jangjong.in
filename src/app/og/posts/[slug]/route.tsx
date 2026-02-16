@@ -33,7 +33,7 @@ export async function GET(
     ]);
 
     return new ImageResponse(
-        <div tw="flex h-full w-full p-5 flex-col justify-between bg-[#F8FAF8] text-[#1d211c]">
+        <div tw="flex h-full w-full p-5 flex-col justify-between bg-[#F7F9F8] text-[#1A211E]">
             <div tw="flex items-center justify-between mb-10 border-b border-b-black">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -44,66 +44,66 @@ export async function GET(
                 >
                     <path
                         d="M76 22L71 17L76 12L81 17L76 22Z"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M150 72L145 67L150 62L155 67L150 72Z"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M65.5 92C15.5 92 15.5 42 65.5 42C115.5 42 115.5 92 65.5 92Z"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M160.5 92C110.5 92 110.5 42 160.5 42C210.5 42 210.5 92 160.5 92Z"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M234.5 66C184.5 66 184.5 16 234.5 16C284.5 16 284.5 66 234.5 66Z"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M273.5 13V63"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M224 39L213.5 87H275.5"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M11 17H45"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M106 17H174"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                         stroke-linecap="square"
                     />
                     <path
                         d="M11 58L26 18H30L51 74"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                     />
                     <path
                         d="M106 58L121 18H125L135.5 46"
-                        stroke="#1d211c"
+                        stroke="#1A211E"
                         stroke-width="2"
                     />
                 </svg>
