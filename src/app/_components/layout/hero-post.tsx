@@ -9,11 +9,12 @@ export function HeroPost({ slug, title, content }: Post) {
         <Grid className="relative overflow-hidden" rows="320px">
             <section>
                 <div className="mb-8">
-                    <Link key={slug} href={`/posts/${slug}`}>
-                        <Text
-                            className="!tracking-tighter mb-8 inline-flex w-full items-center justify-between text-balance font-extrabold"
-                            size="9"
-                        >
+                    <Link
+                        key={slug}
+                        href={`/posts/${slug}`}
+                        className="-outline-offset-1"
+                    >
+                        <Text className="title" size="9">
                             {title}
                             <ArrowRight
                                 size={60}
@@ -24,7 +25,7 @@ export function HeroPost({ slug, title, content }: Post) {
                     </Link>
                 </div>
 
-                <article className="prose">
+                <article className="prose" inert>
                     <Markdown source={content} />
                 </article>
             </section>

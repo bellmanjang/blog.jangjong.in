@@ -1,0 +1,244 @@
+@use "../tokens/variables" as v;
+
+@reference "tailwindcss";
+
+/* Sandpack */
+.prose .md-sandpack {
+    --sp-colors-surface1: var(--gray-2);
+    --sp-colors-surface2: var(--gray-3);
+    --sp-colors-surface3: var(--gray-4);
+    --sp-colors-clickable: var(--gray-11);
+    --sp-colors-base: var(--gray-12);
+    --sp-colors-disabled: var(--gray-6);
+    --sp-colors-hover: var(--gray-12);
+    --sp-colors-accent: var(--accent-11);
+
+    --sandpack-error-bg: var(--tomato-12);
+    --sandpack-error-msg: var(--tomato-5);
+
+    @apply block mb-4 p-1 border border-[var(--accent-a8)] bg-[var(--block-wrapper-bg)];
+
+    color-scheme: light dark !important;
+    tab-size: 4;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.prose .md-sandpack .md-sp-layout {
+    @apply flex flex-wrap gap-px;
+}
+
+.prose .md-sandpack .md-sp-file-explorer {
+    @apply flex-[0.2] min-w-[150px] h-full p-3 bg-[var(--sp-colors-surface2)] overflow-hidden;
+
+    height: v.$sandpack-flex-row-h;
+
+    @media screen and (max-width: 768px) {
+        @apply flex-1;
+
+        min-width: 100%;
+        height: v.$sandpack-flex-col-file-explorer-h;
+    }
+}
+
+.prose .md-sandpack .md-sp-file-explorer-dir {
+    @apply flex flex-col;
+}
+
+.prose .md-sandpack .md-sp-file-explorer-btn {
+    @apply justify-start !m-0 py-0 pr-0 h-6;
+
+    outline-offset: -2px;
+}
+
+.prose .md-sandpack .md-sp-file-explorer-icon {
+    @apply shrink-0 w-4 h-4 flex items-center justify-center;
+}
+
+.prose .md-sandpack .md-sp-viewer-wrapper {
+    @apply flex-1 w-0 overflow-hidden;
+
+    height: v.$sandpack-flex-row-h;
+
+    @media screen and (max-width: 768px) {
+        min-width: 100%;
+        height: v.$sandpack-flex-col-viewer-h;
+    }
+}
+
+.prose .md-sandpack .md-sp-tabs {
+    @apply border-b-[var(--border-gray)] bg-[var(--sp-colors-surface1)];
+}
+
+.prose .md-sandpack .md-sp-tabs-scrollable-container {
+    @apply p-1 min-h-[30px] font-medium;
+}
+
+.prose .md-sandpack .md-sp-tab-container {
+    @apply relative outline-0;
+}
+
+.prose .md-sandpack .md-sp-tab-button {
+    @apply flex gap-2 items-center my-auto ml-0 mr-6 py-0 px-1 h-6 text-[var(--sp-colors-clickable)];
+
+    &:hover {
+        @apply text-[var(--sp-colors-hover)];
+    }
+
+    &[data-active="true"] {
+        @apply text-[var(--sp-colors-accent)];
+    }
+}
+
+.prose .md-sandpack .md-sp-tab-close-button {
+    @apply absolute top-1 right-1 flex items-center justify-center w-4 h-4 m-0 p-0 rounded-full overflow-hidden;
+
+    &:hover {
+        @apply bg-[var(--gray-6)];
+    }
+}
+
+
+.prose .md-sandpack .md-sp-fenced-code {
+    flex: 1;
+    height: 0;
+}
+
+.prose .md-sandpack .md-sp-preview {
+    @apply flex-1 relative flex flex-col gap-px w-full bg-[var(--sp-colors-surface2)] overflow-hidden;
+
+    height: v.$sandpack-flex-row-h;
+}
+
+.prose .md-sandpack .md-sp-preview-container {
+    @apply flex-1 relative flex flex-col bg-white overflow-auto;
+}
+
+.prose .md-sandpack .md-sp-preview-iframe {
+    @apply outline-0 border-0 w-full h-full max-h-[70dvh];
+
+    min-height: v.$sandpack-flex-row-h;
+}
+
+.prose .md-sandpack .md-sp-preview-actions {
+    @apply absolute bottom-3 right-3 flex gap-2 z-[2];
+}
+
+.prose .md-sandpack .md-sp-open-in-code-sandbox-btn {
+    min-width: 24px;
+    padding: 0 !important;
+    gap: 0 !important;
+}
+
+.prose .md-sandpack .md-sp-preview-container > .md-sp-overlay {
+    position: absolute !important;
+    inset: 0;
+}
+
+.prose .md-sandpack .md-sp-loading {
+    @apply relative bg-[var(--sp-colors-surface2)] z-[4];
+}
+
+.prose .md-sandpack .md-sp-loading-bar {
+    @apply absolute bottom-3.5 left-4.5 right-4.5;
+}
+
+.prose .md-sandpack .md-sp-loading-progress {
+    @apply flex-1 max-w-3/4 font-mono text-xs text-[var(--sp-colors-clickable)];
+
+    & > p {
+        @apply m-0 whitespace-nowrap text-ellipsis overflow-hidden;
+    }
+}
+
+.prose .md-sandpack .md-sp-cube-wrapper {
+    @apply flex items-center justify-center w-5 h-5 rounded-sm;
+
+    & > .md-sp-cube {
+        @apply flex items-center justify-center;
+        transform: scale(0.13, 0.13);
+
+        & * {
+            @apply absolute w-24 h-24;
+        }
+
+        & > .md-sp-sides {
+            @keyframes cube-rotate {
+                0% {
+                    transform: rotateX(-25.5deg) rotateY(45deg);
+                }
+
+                100% {
+                    transform: rotateX(-25.5deg) rotateY(405deg);
+                }
+            }
+
+            animation: cube-rotate 1s linear infinite;
+            animation-fill-mode: forwards;
+            transform-style: preserve-3d;
+            transform: rotateX(-25.5deg) rotateY(45deg);
+
+            & > * {
+                @apply rounded-lg border-[10px] border-[var(--sp-colors-clickable)] bg-[var(--sp-colors-surface2)];
+            }
+
+            & > .top {
+                transform: rotateX(90deg) translateZ(44px);
+            }
+
+            & > .bottom {
+                transform: rotateX(-90deg) translateZ(44px);
+            }
+
+            & > .front {
+                transform: rotateY(0deg) translateZ(44px);
+            }
+
+            & > .back {
+                transform: rotateY(-180deg) translateZ(44px);
+            }
+
+            & > .left {
+                transform: rotateY(-90deg) translateZ(44px);
+            }
+
+            & > .right {
+                transform: rotateY(90deg) translateZ(44px);
+            }
+        }
+    }
+}
+
+.prose .md-sandpack .md-sp-error-wrapper {
+    @apply invisible pb-3 pr-3 bg-[var(--sandpack-error-msg)] z-[3];
+
+    &:has(.md-sp-error) {
+        @apply visible;
+    }
+}
+
+.prose .md-sandpack .md-sp-error {
+    @apply flex flex-col gap-2 p-8 w-full h-full bg-[var(--sandpack-error-bg)] whitespace-pre-wrap font-mono font-medium text-xs text-[var(--sandpack-error-msg)];
+
+    & .md-sp-error-msg {
+        @apply flex flex-col gap-2;
+    }
+
+    & .md-sp-error-title {
+        @apply font-bold;
+    }
+
+    & .md-sp-error-restart-btn {
+        @apply font-mono text-xs text-[var(--sandpack-error-msg)];
+
+        margin: 0 !important;
+        padding: 2px 4px !important;
+
+        &:hover {
+            @apply bg-[var(--sandpack-error-msg)] text-[var(--sandpack-error-bg)];
+        }
+    }
+}

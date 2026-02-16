@@ -19,18 +19,17 @@ export const ExpandableBox = ({ children }: PropsWithChildren) => {
                 }
             >
                 {children}
-                <Box height={"64px"} />
                 <Flex
                     className="expandable-box-gradient"
                     justify="center"
                     align="end"
                 >
-                    <Box>
+                    <Box className="expand-btn-wrapper">
                         <Button
                             size="1"
                             color="gray"
                             highContrast
-                            variant="outline"
+                            variant="surface"
                             onClick={() => setExpanded(cur => !cur)}
                         >
                             <Text weight="bold">
