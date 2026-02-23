@@ -1,4 +1,4 @@
-export function parseLang(lang: string): string {
+export function syntaxHighlighterLanguage(lang: string): string {
     switch (lang) {
         case "ts":
             return "typescript";

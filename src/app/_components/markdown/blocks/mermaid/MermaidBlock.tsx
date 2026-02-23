@@ -1,17 +1,18 @@
 "use client";
 
+import { Skeleton } from "@radix-ui/themes";
 import mermaid from "mermaid";
+import { useTheme } from "next-themes";
 import { useEffect, useId, useState } from "react";
 
 export function MermaidBlock({ code }: { code: string }) {
+    const { resolvedTheme } = useTheme();
+
     const id = useId();
     const [svg, setSvg] = useState<string>("");
 
     useEffect(() => {
-        mermaid.initialize({
-            startOnLoad: false,
-            securityLevel: "strict",
-        });
+        if (!resolvedTheme) return;
 
         let canceled = false;
 
@@ -29,7 +30,18 @@ export function MermaidBlock({ code }: { code: string }) {
         return () => {
             canceled = true;
         };
-    }, [code, id]);
+    }, [resolvedTheme, code, id]);
 
-    return <div className="p-2" dangerouslySetInnerHTML={{ __html: svg }} />;
+    return (
+        <div className="md-fenced-code">
+            {svg ? (
+                <pre
+                    className="md-mermaid"
+                    dangerouslySetInnerHTML={{ __html: svg }}
+                />
+            ) : (
+                <Skeleton className="aspect-[4/1]" width="100%" height="auto" />
+            )}
+        </div>
+    );
 }
