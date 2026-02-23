@@ -1,7 +1,7 @@
 "use client";
 
 import { useSandpack } from "@codesandbox/sandpack-react/unstyled";
-import { FencedCodeClient } from "@/app/_components/markdown/blocks/fenced-code/FencedCodeClient";
+import { SandpackFencedCodeClient } from "@/app/_components/markdown/blocks/sandpack/code-viewer/SandpackFencedCodeClient";
 
 export const CodeViewerClient = () => {
     const { sandpack } = useSandpack();
@@ -10,12 +10,5 @@ export const CodeViewerClient = () => {
     const code = files[activeFile].code;
     const lang = activeFile.substring(activeFile.lastIndexOf(".") + 1);
 
-    return (
-        <FencedCodeClient
-            className="md-sp-fenced-code"
-            code={code}
-            lang={lang}
-            expandable={false}
-        />
-    );
+    return <SandpackFencedCodeClient code={code} lang={lang} />;
 };

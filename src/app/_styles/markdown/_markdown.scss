@@ -176,6 +176,15 @@ ul {
     margin-right: 0.5ch;
 }
 
+/* Mermaid */
+.prose .md-fenced-code .md-mermaid {
+    @apply bg-[var(--fenced-code-bg)];
+
+    & > svg {
+        @apply m-auto
+    }
+}
+
 /* Inline code */
 .prose .md-inline-code {
     @apply p-1 bg-[var(--block-wrapper-bg)] text-sm font-mono font-medium;

@@ -14,6 +14,7 @@ const pretendard = localFont({
     src: "../../public/fonts/Pretendard/PretendardVariable.woff2",
     variable: "--font-pretendard",
     display: "swap",
+    preload: true,
 });
 const inconsolata = Inconsolata({
     variable: "--font-inconsolata",
@@ -60,7 +61,7 @@ export default function RootLayout({
             className={cx(
                 pretendard.variable,
                 inconsolata.variable,
-                "font-sans",
+                "overflow-hidden font-sans",
             )}
         >
             <head>
@@ -92,12 +93,12 @@ export default function RootLayout({
                             <main className="layout-main">
                                 <Navbar />
                                 {children}
-                                <Analytics />
-                                <SpeedInsights />
                             </main>
                         </ScrollArea>
                     </Theme>
                 </ThemeProvider>
+                <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );

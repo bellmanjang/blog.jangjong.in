@@ -30,7 +30,7 @@ export const PreviewClient = React.forwardRef<SandpackPreviewRef, PreviewProps>(
         },
         ref,
     ) => {
-        const { sandpack, listen, iframe, getClient, clientId, dispatch } =
+        const { sandpack, listen, iframe, getClient, clientId } =
             useSandpackClient({ startRoute });
         const [iframeComputedHeight, setComputedAutoHeight] = React.useState<
             number | null

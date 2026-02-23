@@ -30,7 +30,7 @@ export const SandpackBlockClient = ({
                     "sp-error": "md-sp-error",
                     "sp-error-message": "md-sp-error-msg",
                 },
-                initMode: "user-visible",
+                initMode: "lazy",
                 recompileMode: "delayed",
             }}
         >

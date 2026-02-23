@@ -1,19 +1,18 @@
 "use client";
 
-import { Skeleton } from "@radix-ui/themes";
+import { ScrollArea } from "@radix-ui/themes";
 import dynamic from "next/dynamic";
 import { TextCopyButton } from "@/app/_components/markdown/blocks/fenced-code/TextCopyButton";
-import { ExpandableBox } from "@/app/_components/ui/expandable-box";
 
 const HighlightedPre = dynamic(
-    () => import("./HighlightedPre").then(m => m.HighlightedPre),
+    () =>
+        import("../../fenced-code/HighlightedPre").then(m => m.HighlightedPre),
     {
         ssr: false,
-        loading: () => <Skeleton className="md-fenced-code" />,
     },
 );
 
-export const FencedCodeClient = ({
+export const SandpackFencedCodeClient = ({
     code,
     lang,
 }: {
@@ -21,12 +20,11 @@ export const FencedCodeClient = ({
     lang: string;
 }) => {
     return (
-        <div className="md-fenced-code">
+        <div className="md-fenced-code md-sp-fenced-code">
             <TextCopyButton text={code} />
-
-            <ExpandableBox>
+            <ScrollArea scrollbars="both">
                 <HighlightedPre code={code} lang={lang} />
-            </ExpandableBox>
+            </ScrollArea>
         </div>
     );
 };
