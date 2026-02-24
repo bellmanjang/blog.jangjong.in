@@ -14,7 +14,10 @@ export function HeroPost({ slug, title, content }: Post) {
                         href={`/posts/${slug}`}
                         className="-outline-offset-1"
                     >
-                        <Text className="title" size="9">
+                        <Text
+                            className="inline-flex w-full items-center justify-between text-balance font-extrabold leading-snug tracking-tighter"
+                            size="9"
+                        >
                             {title}
                             <ArrowRight
                                 size={60}
@@ -25,7 +28,7 @@ export function HeroPost({ slug, title, content }: Post) {
                     </Link>
                 </div>
 
-                <article className="prose" inert>
+                <article className="px-6" inert>
                     <Markdown source={content} />
                 </article>
             </section>

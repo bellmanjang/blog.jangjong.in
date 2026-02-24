@@ -1,14 +1,16 @@
-$layout-max-w: 896px;
-$layout-px: 16px;
-$navbar-h: 50px;
-$navbar-gap: 16px;
-$res-logo-h: 34px;
-$res-logo-text-w: 96px;
-$res-logo-symbol-w: 34px;
-$nav-blog-w: 60px;
-$expandable-box-gradient-h: 80px;
-$code-linenumber-pl: 2ch;
-$code-linenumber-pr: 4ch;
-$sandpack-flex-row-h: 300px;
-$sandpack-flex-col-file-explorer-h: 150px;
-$sandpack-flex-col-viewer-h: 200px;
+@theme {
+    --layout-max-w: 896px;
+    --layout-px: 16px;
+    --navbar-h: 50px;
+    --navbar-gap: 16px;
+    --res-logo-h: 34px;
+    --res-logo-text-w: 96px;
+    --res-logo-symbol-w: 34px;
+    --nav-blog-w: 60px;
+    --expandable-box-gradient-h: 80px;
+    --code-linenumber-pl: 2ch;
+    --code-linenumber-pr: 4ch;
+    --sandpack-flex-row-h: 300px;
+    --sandpack-flex-col-file-explorer-h: 150px;
+    --sandpack-flex-col-viewer-h: 200px;
+}

@@ -1,7 +1,7 @@
 {
   "name": "blog.jangjong.in",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@codesandbox/sandpack-client": "^2.19.8",
     "@codesandbox/sandpack-react": "^2.20.0",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.563.0",
@@ -29,6 +30,7 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "sass": "^1.97.3",
+    "tailwind-merge": "^3.5.0",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0"
   },

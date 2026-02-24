@@ -12,7 +12,9 @@ export async function Markdown({ source }: Props) {
     return (
         <>
             <MermaidConfig />
-            <MarkdownAsync {...markdownOptions}>{source}</MarkdownAsync>
+            <div className="prose">
+                <MarkdownAsync {...markdownOptions}>{source}</MarkdownAsync>
+            </div>
         </>
     );
 }

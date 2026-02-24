@@ -2,7 +2,7 @@ export const ResponsiveLogo = () => {
     return (
         <>
             <svg
-                className="res-logo-text"
+                className="hidden h-[var(--res-logo-h)] w-[var(--res-logo-text-w)] md:block"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 288 102"
                 fill="none"
@@ -74,7 +74,7 @@ export const ResponsiveLogo = () => {
             </svg>
 
             <svg
-                className="res-logo-symbol"
+                className="block h-[var(--res-logo-h)] w-[var(--res-logo-symbol-w)] md:hidden"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 80 80"
                 fill="none"

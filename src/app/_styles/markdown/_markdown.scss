@@ -1,13 +1,9 @@
-@use "../tokens/variables" as v;
-
 @reference "tailwindcss";
 
 .prose {
     --block-wrapper-bg: var(--gray-4);
     --fenced-code-bg: var(--gray-2);
     --border-gray: var(--gray-a6);
-
-    @apply px-6;
 }
 
 /* Thematic breaks */
@@ -43,7 +39,7 @@
 .prose .headings {
     @apply inline-block;
 
-    scroll-margin-top: v.$navbar-h;
+    scroll-margin-top: var(--navbar-h);
 }
 
 .prose .md-anchor {
@@ -144,14 +140,14 @@ ul {
 .prose .md-fenced-code .md-pre-wrapper {
     @apply relative h-full text-sm font-mono font-medium bg-[var(--fenced-code-bg)];
 
-    padding: 0 v.$expandable-box-gradient-h v.$expandable-box-gradient-h 0 !important;
+    padding: 0 var(--expandable-box-gradient-h) var(--expandable-box-gradient-h) 0 !important;
 
     &::before {
         content: "";
         position: absolute;
         top: 0;
         bottom: 0;
-        left: calc(v.$code-linenumber-pl + var(--ln-width) + v.$code-linenumber-pr);
+        left: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr));
         width: 1px;
         background-color: var(--border-gray);
         pointer-events: none;
@@ -170,9 +166,9 @@ ul {
 }
 
 .prose .md-fenced-code pre > code span.linenumber {
-    min-width: calc(v.$code-linenumber-pl + var(--ln-width) + v.$code-linenumber-pr) !important;
-    padding-left: v.$code-linenumber-pl !important;
-    padding-right: v.$code-linenumber-pr !important;
+    min-width: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr)) !important;
+    padding-left: var(--code-linenumber-pl) !important;
+    padding-right: var(--code-linenumber-pr) !important;
     margin-right: 0.5ch;
 }
 
