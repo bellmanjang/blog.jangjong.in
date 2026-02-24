@@ -1,17 +1,8 @@
 "use client";
 
-import { Skeleton } from "@radix-ui/themes";
-import dynamic from "next/dynamic";
+import { HighlightedPre } from "@/app/_components/markdown/blocks/fenced-code/HighlightedPre";
 import { TextCopyButton } from "@/app/_components/markdown/blocks/fenced-code/TextCopyButton";
 import { ExpandableBox } from "@/app/_components/ui/expandable-box";
-
-const HighlightedPre = dynamic(
-    () => import("./HighlightedPre").then(m => m.HighlightedPre),
-    {
-        ssr: false,
-        loading: () => <Skeleton className="md-fenced-code" />,
-    },
-);
 
 export const FencedCodeClient = ({
     code,
