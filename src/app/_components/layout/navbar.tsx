@@ -21,13 +21,22 @@ const navItems: { [path: string]: NavItem } = {
 
 export function Navbar() {
     return (
-        <aside className="layout-header">
-            <nav className="layout-nav">
-                <Link href={"/"} className="nav-home-btn">
+        <aside className="sticky top-0 z-[1000] mb-15 h-[var(--navbar-h)] border-b border-b-[var(--gray-12)] bg-[var(--color-background)] p-1 tracking-tight md:mt-10">
+            <nav className="relative flex h-full flex-row items-center gap-[var(--navbar-gap)]">
+                <Link
+                    href="/"
+                    title="Go to Home"
+                    className="relative my-auto flex shrink-0 basis-[var(--res-logo-symbol-w)] items-center md:basis-[var(--res-logo-text-w)]"
+                >
                     <ResponsiveLogo />
                 </Link>
                 <ScrollArea type="auto" scrollbars="horizontal">
-                    <Flex className="nav-scroll-area" gap="4" wrap="nowrap">
+                    <Flex
+                        className="nav-scroll-area"
+                        gap="4"
+                        wrap="nowrap"
+                        height="100%"
+                    >
                         {Object.entries(navItems).map(([path, item]) => {
                             const out = !path.startsWith("/");
 
@@ -35,12 +44,16 @@ export function Navbar() {
                                 <Link
                                     key={path}
                                     href={path}
+                                    title={`Go to ${item.name}`}
                                     target={out ? "_blank" : undefined}
-                                    className="nav-item"
+                                    className="mx-1 my-auto px-1"
                                 >
                                     <Text wrap="nowrap">
                                         {out && (
-                                            <ArrowUpRight strokeLinecap="butt" />
+                                            <ArrowUpRight
+                                                className="inline-block align-middle"
+                                                strokeLinecap="butt"
+                                            />
                                         )}
                                         {item.name}
                                     </Text>
@@ -49,7 +62,10 @@ export function Navbar() {
                         })}
                     </Flex>
                 </ScrollArea>
-                <Text size="6" className="nav-blog">
+                <Text
+                    size="6"
+                    className="nav-blog my-auto shrink-0 basis-[var(--nav-blog-w)] font-extrabold"
+                >
                     Blog.
                 </Text>
             </nav>

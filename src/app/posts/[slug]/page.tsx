@@ -32,7 +32,10 @@ export default async function PostPage(props: Params) {
                 dangerouslySetInnerHTML={{ __html: buildJsonLd(post) }}
             />
 
-            <Text className="title" size="9">
+            <Text
+                className="inline-flex w-full items-center justify-between text-balance font-extrabold leading-snug tracking-tighter"
+                size="9"
+            >
                 {post.title}
             </Text>
             <div className="mt-2 mb-8">
@@ -40,7 +43,7 @@ export default async function PostPage(props: Params) {
                     {formatDate(post.publishedAt)}
                 </Text>
             </div>
-            <article className="prose">
+            <article className="px-6">
                 <Markdown source={post.content} />
             </article>
         </section>

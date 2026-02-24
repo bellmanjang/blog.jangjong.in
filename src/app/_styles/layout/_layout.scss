@@ -1,75 +1,9 @@
-@use "../tokens/variables" as v;
-
 @reference "tailwindcss";
 
-.layout-main {
-    @apply relative flex flex-col h-full lg:mx-auto;
-
-    width: 100% !important;
-    max-width: v.$layout-max-w;
-    padding: 0 v.$layout-px 50px v.$layout-px;
-}
-
-.layout-header {
-    @apply sticky top-0 z-[1000] mb-15 p-1 border-b border-b-[var(--gray-12)] bg-[var(--color-background)] tracking-tight md:mt-10;
-
-    height: v.$navbar-h;
-}
-
-.layout-nav {
-    @apply relative flex flex-row items-center h-full;
-
-    gap: v.$navbar-gap;
-}
-
-.res-logo-text {
-    @apply hidden md:block;
-
-    width: v.$res-logo-text-w;
-    height: v.$res-logo-h;
-}
-
-.res-logo-symbol {
-    @apply block md:hidden;
-
-    width: v.$res-logo-symbol-w;
-    height: v.$res-logo-h;
-}
-
-.nav-home-btn {
-    @apply shrink-0 relative flex items-center my-auto;
-
-    flex-basis: v.$res-logo-symbol-w;
-
-    @media screen and (min-width: 768px) {
-        flex-basis: v.$res-logo-text-w;
-    }
-}
-
 .nav-scroll-area {
-    @apply h-full;
-
-    max-width: calc(min(v.$layout-max-w,100vw) - v.$layout-px * 2 - v.$navbar-gap * 2 - v.$res-logo-symbol-w - v.$nav-blog-w);
+    max-width: calc(min(var(--layout-max-w),100vw) - var(--layout-px) * 2 - var(--navbar-gap) * 2 - var(--res-logo-symbol-w) - var(--nav-blog-w));
 
     @media screen and (min-width: 768px) {
-        max-width: calc(min(v.$layout-max-w,100vw) - v.$layout-px * 2 - v.$navbar-gap * 2 - v.$res-logo-text-w - v.$nav-blog-w);
+        max-width: calc(min(var(--layout-max-w),100vw) - var(--layout-px) * 2 - var(--navbar-gap) * 2 - var(--res-logo-text-w) - var(--nav-blog-w));
     }
-}
-
-.nav-item {
-    @apply my-auto mx-1 px-1;
-
-    & svg {
-        @apply inline-block align-middle;
-    }
-}
-
-.nav-blog {
-    @apply shrink-0 my-auto font-extrabold;
-
-    flex-basis: v.$nav-blog-w;
-}
-
-.title {
-    @apply inline-flex w-full items-center justify-between text-balance font-extrabold leading-snug tracking-tighter;
 }

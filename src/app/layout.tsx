@@ -111,7 +111,7 @@ export default function RootLayout({
                             scrollbars="vertical"
                             size="2"
                         >
-                            <main className="layout-main">
+                            <main className="relative flex h-full max-w-[var(--layout-max-w)] flex-col px-[var(--layout-px)] pb-12 lg:mx-auto">
                                 <Navbar />
                                 {children}
                             </main>

@@ -1,5 +1,3 @@
-@use "../tokens/variables" as v;
-
 @reference "tailwindcss";
 
 /* Sandpack */
@@ -34,13 +32,13 @@
 .prose .md-sandpack .md-sp-file-explorer {
     @apply flex-[0.2] min-w-[150px] h-full p-3 bg-[var(--sp-colors-surface2)] overflow-hidden;
 
-    height: v.$sandpack-flex-row-h;
+    height: var(--sandpack-flex-row-h);
 
     @media screen and (max-width: 768px) {
         @apply flex-1;
 
         min-width: 100%;
-        height: v.$sandpack-flex-col-file-explorer-h;
+        height: var(--sandpack-flex-col-file-explorer-h);
     }
 }
 
@@ -61,11 +59,11 @@
 .prose .md-sandpack .md-sp-viewer-wrapper {
     @apply flex-1 w-0 overflow-hidden;
 
-    height: v.$sandpack-flex-row-h;
+    height: var(--sandpack-flex-row-h);
 
     @media screen and (max-width: 768px) {
         min-width: 100%;
-        height: v.$sandpack-flex-col-viewer-h;
+        height: var(--sandpack-flex-col-viewer-h);
     }
 }
 
@@ -110,7 +108,7 @@
 .prose .md-sandpack .md-sp-preview {
     @apply flex-1 relative flex flex-col gap-px w-full bg-[var(--sp-colors-surface2)] overflow-hidden;
 
-    height: v.$sandpack-flex-row-h;
+    height: var(--sandpack-flex-row-h);
 }
 
 .prose .md-sandpack .md-sp-preview-container {
@@ -120,7 +118,7 @@
 .prose .md-sandpack .md-sp-preview-iframe {
     @apply outline-0 border-0 w-full h-full max-h-[70dvh];
 
-    min-height: v.$sandpack-flex-row-h;
+    min-height: var(--sandpack-flex-row-h);
 }
 
 .prose .md-sandpack .md-sp-preview-actions {
