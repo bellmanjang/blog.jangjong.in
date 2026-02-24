@@ -65,7 +65,7 @@
 }
 
 .nav-blog {
-    @apply shrink-0 my-auto font-black;
+    @apply shrink-0 my-auto font-extrabold;
 
     flex-basis: v.$nav-blog-w;
 }

@@ -11,7 +11,28 @@ import { Navbar } from "@/app/_components/layout/navbar";
 import { cx } from "@/lib/utils/class-util";
 
 const pretendard = localFont({
-    src: "../../public/fonts/Pretendard/PretendardVariable.woff2",
+    src: [
+        {
+            path: "../../public/fonts/Pretendard/Pretendard-Regular.subset.woff2",
+            weight: "400",
+            style: "normal",
+        },
+        {
+            path: "../../public/fonts/Pretendard/Pretendard-Medium.subset.woff2",
+            weight: "500",
+            style: "normal",
+        },
+        {
+            path: "../../public/fonts/Pretendard/Pretendard-Bold.subset.woff2",
+            weight: "700",
+            style: "normal",
+        },
+        {
+            path: "../../public/fonts/Pretendard/Pretendard-ExtraBold.subset.woff2",
+            weight: "800",
+            style: "normal",
+        },
+    ],
     variable: "--font-pretendard",
     display: "swap",
     preload: true,
@@ -75,9 +96,9 @@ export default function RootLayout({
             <body>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
+                    // defaultTheme="system"
+                    // enableSystem
+                    // disableTransitionOnChange
                 >
                     <Theme
                         id="theme-root"

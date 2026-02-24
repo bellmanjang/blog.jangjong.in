@@ -4,7 +4,7 @@ import mermaid from "mermaid";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
-export const MermaidInitializer = () => {
+export const MermaidConfig = () => {
     const { resolvedTheme } = useTheme();
 
     useEffect(() => {

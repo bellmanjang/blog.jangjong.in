@@ -12,23 +12,12 @@ export async function GET(
 
     const post = getPostBySlug(slug);
 
-    const [
-        PretendardBlack,
-        PretendardExtraBold,
-        PretendardSemiBold,
-        PretendardRegular,
-    ] = await Promise.all([
+    const [PretendardRegular, PretendardExtraBold] = await Promise.all([
         fetch(
-            `${process.env.BASE_URL}/fonts/Pretendard/Pretendard-Black.otf`,
+            `${process.env.BASE_URL}/fonts/Pretendard/Pretendard-Regular.otf`,
         ).then(res => res.arrayBuffer()),
         fetch(
             `${process.env.BASE_URL}/fonts/Pretendard/Pretendard-ExtraBold.otf`,
-        ).then(res => res.arrayBuffer()),
-        fetch(
-            `${process.env.BASE_URL}/fonts/Pretendard/Pretendard-SemiBold.otf`,
-        ).then(res => res.arrayBuffer()),
-        fetch(
-            `${process.env.BASE_URL}/fonts/Pretendard/Pretendard-Regular.otf`,
         ).then(res => res.arrayBuffer()),
     ]);
 
@@ -110,7 +99,7 @@ export async function GET(
                 <span
                     tw="flex flex-col text-left font-bold text-[96px] tracking-tight"
                     style={{
-                        fontFamily: "PretendardBlack",
+                        fontFamily: "PretendardExtraBold",
                     }}
                 >
                     Blog.
@@ -172,7 +161,7 @@ export async function GET(
                     <span
                         tw="text-[32px]"
                         style={{
-                            fontFamily: "PretendardBlack",
+                            fontFamily: "PretendardExtraBold",
                         }}
                     >
                         blog.jangjong.in
@@ -202,20 +191,12 @@ export async function GET(
             height: 630,
             fonts: [
                 {
-                    name: "PretendardBlack",
-                    data: PretendardBlack,
+                    name: "PretendardRegular",
+                    data: PretendardRegular,
                 },
                 {
                     name: "PretendardExtraBold",
                     data: PretendardExtraBold,
-                },
-                {
-                    name: "PretendardSemiBold",
-                    data: PretendardSemiBold,
-                },
-                {
-                    name: "PretendardRegular",
-                    data: PretendardRegular,
                 },
             ],
         },

@@ -1,7 +1,7 @@
 "use server";
 
 import { MarkdownAsync } from "react-markdown";
-import { MermaidInitializer } from "@/app/_components/markdown/blocks/mermaid/MermaidInitializer";
+import { MermaidConfig } from "@/app/_components/config/MermaidConfig";
 import { markdownOptions } from "@/app/_components/markdown/options";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 export async function Markdown({ source }: Props) {
     return (
         <>
-            <MermaidInitializer />
+            <MermaidConfig />
             <MarkdownAsync {...markdownOptions}>{source}</MarkdownAsync>
         </>
     );
