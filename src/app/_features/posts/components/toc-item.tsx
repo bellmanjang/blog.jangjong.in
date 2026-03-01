@@ -44,7 +44,6 @@ export const TocItem = ({
     const headingsInView = useTocStore(state => state.headingsInView);
     const hoverTocId = useTocStore(state => state.hoverTocId);
     const observer = useTocStore(s => s.headingsObserver);
-    const updateHoverTocId = useTocStore(state => state.updateHoverTocId);
     const updateClickTocId = useTocStore(state => state.updateClickTocId);
 
     useEffect(() => {
@@ -83,11 +82,11 @@ export const TocItem = ({
             ref={ref}
             className="toc-item relative max-w-8 transition-all xl:max-w-60"
             data-roots={isRoot}
-            data-toc-id={id}
         >
             <Tooltip.Root>
                 <Tooltip.Trigger asChild>
                     <a
+                        data-toc-id={id}
                         className={cx(
                             "relative block w-fit max-w-full px-2 py-0.5",
                             selfActive
@@ -101,8 +100,6 @@ export const TocItem = ({
                             updateClickTocId(id);
                             handleHeadingsAnchorClick(e, id);
                         }}
-                        onMouseEnter={() => updateHoverTocId(id)}
-                        onMouseLeave={() => updateHoverTocId(null)}
                     >
                         {!isRoot && (
                             <span className="pointer-events-none absolute top-1/2 left-0 inline-flex -translate-x-full -translate-y-1/2">
