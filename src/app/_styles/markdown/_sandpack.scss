@@ -2,9 +2,9 @@
 
 /* Sandpack */
 .prose .md-sandpack {
-    --sp-colors-surface1: var(--gray-2);
-    --sp-colors-surface2: var(--gray-3);
-    --sp-colors-surface3: var(--gray-4);
+    --sp-colors-surface1: var(--gray-3);
+    --sp-colors-surface2: var(--gray-4);
+    --sp-colors-surface3: var(--gray-5);
     --sp-colors-clickable: var(--gray-11);
     --sp-colors-base: var(--gray-12);
     --sp-colors-disabled: var(--gray-6);
@@ -57,7 +57,7 @@
 }
 
 .prose .md-sandpack .md-sp-viewer-wrapper {
-    @apply flex-1 w-0 overflow-hidden;
+    @apply flex-1 w-0 overflow-hidden gap-px;
 
     height: var(--sandpack-flex-row-h);
 
@@ -77,32 +77,46 @@
 
 .prose .md-sandpack .md-sp-tab-container {
     @apply relative outline-0;
+
+    &:hover {
+        & > .md-sp-tab-close-button {
+            @apply visible;
+        }
+    }
+
+    &[data-active="true"] {
+        & > .md-sp-tab-button {
+            @apply text-[var(--sp-colors-accent)];
+        }
+
+        & > .md-sp-tab-close-button {
+            @apply visible;
+        }
+    }
 }
 
-.prose .md-sandpack .md-sp-tab-button {
+.prose .md-sandpack .md-sp-tab-container > .md-sp-tab-button {
     @apply flex gap-2 items-center my-auto ml-0 mr-6 py-0 px-1 h-6 text-[var(--sp-colors-clickable)];
 
     &:hover {
         @apply text-[var(--sp-colors-hover)];
     }
-
-    &[data-active="true"] {
-        @apply text-[var(--sp-colors-accent)];
-    }
 }
 
-.prose .md-sandpack .md-sp-tab-close-button {
-    @apply absolute top-1 right-1 flex items-center justify-center w-4 h-4 m-0 p-0 rounded-full overflow-hidden;
+.prose .md-sandpack .md-sp-tab-container > .md-sp-tab-close-button {
+    @apply invisible absolute top-1 right-1 flex items-center justify-center w-4 h-4 m-0 p-0 rounded-full overflow-hidden;
 
     &:hover {
         @apply bg-[var(--gray-6)];
     }
 }
 
-
 .prose .md-sandpack .md-sp-fenced-code {
-    flex: 1;
-    height: 0;
+    @apply relative flex-1 h-0;
+}
+
+.prose .md-sandpack .md-sp-fenced-code .md-code-copy-btn-wrapper {
+    @apply top-auto bottom-3 right-3;
 }
 
 .prose .md-sandpack .md-sp-preview {
@@ -148,7 +162,7 @@
     @apply flex-1 max-w-3/4 font-mono text-xs text-[var(--sp-colors-clickable)];
 
     & > p {
-        @apply m-0 whitespace-nowrap text-ellipsis overflow-hidden;
+        @apply m-0 overflow-hidden text-ellipsis whitespace-nowrap;
     }
 }
 

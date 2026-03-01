@@ -12,22 +12,20 @@ function slugify(str: any) {
         .replace(/--+/g, "-"); // Replace multiple - with single -
 }
 
-function getTextContent(node: any): string {
+export function getTextContent(node: any): string {
     if (!node) return "";
     if (node.type === "text") return node.value ?? "";
-    if (Array.isArray(node.children)) {
+    if (Array.isArray(node.children))
         return node.children.map(getTextContent).join("");
-    }
     return "";
 }
 
-const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
+export const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 
 export const rehypeHeadingId: Plugin<[], Root> = () => {
-    const used = new Set<string>();
-
     return tree => {
-        // DFS
+        const used = new Set<string>();
+
         const walk = (node: any) => {
             if (!node) return;
 
@@ -40,11 +38,7 @@ export const rehypeHeadingId: Plugin<[], Root> = () => {
 
                     let id = base;
                     let i = 2;
-
-                    while (used.has(id)) {
-                        id = `${base}-${i++}`;
-                    }
-
+                    while (used.has(id)) id = `${base}-${i++}`;
                     used.add(id);
 
                     el.properties ??= {};

@@ -112,14 +112,10 @@ export const PreviewClient = React.forwardRef<SandpackPreviewRef, PreviewProps>(
                                 color="gray"
                                 highContrast
                                 variant="surface"
-                                className="!gap-0"
+                                className="md-link !gap-0"
                             >
                                 <UnstyledOpenInCodeSandboxButton>
-                                    <Text
-                                        className="md-link"
-                                        weight="bold"
-                                        wrap="nowrap"
-                                    >
+                                    <Text weight="bold" wrap="nowrap">
                                         <ArrowUpRight
                                             className="open-in-new-tab"
                                             strokeLinecap="butt"

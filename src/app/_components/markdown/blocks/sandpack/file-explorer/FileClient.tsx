@@ -42,26 +42,26 @@ export const FileClient = ({
         if (selectFile)
             return (
                 <span className="md-sp-file-explorer-icon">
-                    <FileIcon size={12} fill={"var(--gray-1)"} />
+                    <FileIcon size={12} />
                 </span>
             );
 
         return isDirOpen ? (
             <>
                 <span className="md-sp-file-explorer-icon">
-                    <ChevronDown size={14} fill={"var(--gray-1)"} />
+                    <ChevronDown size={14} />
                 </span>
                 <span className="md-sp-file-explorer-icon">
-                    <FolderOpen size={12} fill={"var(--gray-1)"} />
+                    <FolderOpen size={12} />
                 </span>
             </>
         ) : (
             <>
                 <span className="md-sp-file-explorer-icon">
-                    <ChevronRight size={14} fill={"var(--gray-1)"} />
+                    <ChevronRight size={14} />
                 </span>
                 <span className="md-sp-file-explorer-icon">
-                    <FolderClosed size={12} fill={"var(--gray-1)"} />
+                    <FolderClosed size={12} />
                 </span>
             </>
         );

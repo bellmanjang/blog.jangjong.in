@@ -7,3 +7,33 @@
         max-width: calc(min(var(--layout-max-w),100vw) - var(--layout-px) * 2 - var(--navbar-gap) * 2 - var(--res-logo-text-w) - var(--nav-blog-w));
     }
 }
+
+.toc {
+    top: var(--toc-top);
+    bottom: var(--toc-bottom);
+    right: var(--toc-margin);
+    max-width: calc((100vw - min(var(--layout-max-w),100vw)) / 2 - var(--toc-margin)) !important;
+    max-height: calc(100dvh - var(--toc-top) - var(--toc-bottom) - var(--toc-margin)) !important;
+}
+
+.toc-item[data-roots="true"] {
+    &:first-of-type {
+        @apply pt-1;
+    }
+
+    &:last-of-type {
+        @apply pb-1;
+    }
+}
+
+.toc-tooltip-content {
+    @media screen and (min-width: 1280px) {
+        transform: translateX(calc((var(--depth) - 1) * -20px));
+    }
+}
+
+.post {
+    @media screen and (max-width: 936px) {
+        margin-right: 40px;
+    }
+}

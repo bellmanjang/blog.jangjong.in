@@ -1,5 +1,3 @@
-"use server";
-
 import { MarkdownAsync } from "react-markdown";
 import { MermaidConfig } from "@/app/_components/config/MermaidConfig";
 import { markdownOptions } from "@/app/_components/markdown/options";

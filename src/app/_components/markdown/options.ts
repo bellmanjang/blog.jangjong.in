@@ -3,6 +3,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { rehypeCollectToc } from "@/app/_components/markdown/rehype-collect-toc";
 import { rehypeHeadingId } from "@/app/_components/markdown/rehype-heading-id";
 import { rehypeListDepth } from "@/app/_components/markdown/rehype-list-depth";
 import { remarkSandpack } from "@/app/_components/markdown/remark-sandpack";
@@ -22,7 +23,13 @@ export const markdownOptions: Pick<
     "remarkPlugins" | "rehypePlugins" | "components"
 > = {
     remarkPlugins: [remarkGfm, remarkMath, remarkSandpack],
-    rehypePlugins: [rehypeRaw, rehypeKatex, rehypeHeadingId, rehypeListDepth],
+    rehypePlugins: [
+        rehypeRaw,
+        rehypeKatex,
+        rehypeHeadingId,
+        rehypeCollectToc,
+        rehypeListDepth,
+    ],
     components: {
         h1: createHeadingRenderer(1),
         h2: createHeadingRenderer(2),
