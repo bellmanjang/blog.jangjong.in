@@ -1,8 +1,8 @@
 @reference "tailwindcss";
 
 .prose {
-    --block-wrapper-bg: var(--gray-4);
-    --fenced-code-bg: var(--gray-2);
+    --block-wrapper-bg: var(--gray-a5);
+    --fenced-code-bg: var(--gray-3);
     --border-gray: var(--gray-a6);
 }
 
@@ -13,33 +13,27 @@
 
 /* ATX headings */
 .prose h1 {
-    @apply text-4xl tracking-tight mt-6 mb-4;
+    @apply text-4xl tracking-tight mt-12 mb-4;
 }
 
 .prose h2 {
-    @apply text-3xl tracking-tight mt-6 mb-4;
+    @apply text-3xl tracking-tight mt-10 mb-4;
 }
 
 .prose h3 {
-    @apply text-2xl tracking-tight mt-6 mb-4;
-}
-
-.prose h4 {
     @apply text-xl tracking-tight mt-6 mb-4;
 }
 
-.prose h5 {
+.prose h4 {
     @apply text-lg tracking-tight mt-6 mb-4;
 }
 
-.prose h6 {
+.prose h5 {
     @apply text-base tracking-tight mt-6 mb-4;
 }
 
-.prose .headings {
-    @apply inline-block;
-
-    scroll-margin-top: var(--navbar-h);
+.prose h6 {
+    @apply text-base tracking-tight mt-6 mb-4 text-[var(--gray-10)];
 }
 
 .prose .md-anchor {
@@ -133,11 +127,11 @@ ul {
     @apply mb-4;
 }
 
-.prose .md-fenced-code .md-code-copy-btn-wrapper {
-    @apply absolute top-2 right-2 z-10 bg-[var(--gray-1)];
+.prose .md-code-copy-btn-wrapper {
+    @apply absolute top-4 right-4 z-10 bg-[var(--gray-1)];
 }
 
-.prose .md-fenced-code .md-pre-wrapper {
+.prose .md-pre-wrapper {
     @apply relative h-full text-sm font-mono font-medium bg-[var(--fenced-code-bg)];
 
     padding: 0 var(--expandable-box-gradient-h) var(--expandable-box-gradient-h) 0 !important;
@@ -154,18 +148,18 @@ ul {
     }
 }
 
-.prose .md-fenced-code pre {
+.prose .md-pre-wrapper pre {
     @apply w-full h-full !overflow-visible;
 
     padding: 0 !important;
     outline-offset: -1px;
 }
 
-.prose .md-fenced-code pre > code {
+.prose .md-pre-wrapper pre > code {
     @apply inline-block w-full h-full;
 }
 
-.prose .md-fenced-code pre > code span.linenumber {
+.prose .md-pre-wrapper pre > code span.linenumber {
     min-width: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr)) !important;
     padding-left: var(--code-linenumber-pl) !important;
     padding-right: var(--code-linenumber-pr) !important;

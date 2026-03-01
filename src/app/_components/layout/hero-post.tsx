@@ -1,5 +1,5 @@
 import { Box, Grid, Text } from "@radix-ui/themes";
-import { ArrowRight } from "lucide-react";
+import { CornerUpRight } from "lucide-react";
 import Link from "next/link";
 import { Markdown } from "@/app/_components/markdown/md";
 import type { Post } from "@/interfaces/post";
@@ -12,17 +12,17 @@ export function HeroPost({ slug, title, content }: Post) {
                     <Link
                         key={slug}
                         href={`/posts/${slug}`}
-                        className="-outline-offset-1"
+                        className="-outline-offset-8"
                     >
                         <Text
                             className="inline-flex w-full items-center justify-between text-balance font-extrabold leading-snug tracking-tighter"
                             size="9"
                         >
                             {title}
-                            <ArrowRight
+                            <CornerUpRight
                                 size={60}
                                 strokeLinecap="butt"
-                                strokeWidth="2.75"
+                                strokeWidth="3"
                             />
                         </Text>
                     </Link>

@@ -94,19 +94,15 @@ export default function RootLayout({
                 />
             </head>
             <body>
-                <ThemeProvider
-                    attribute="class"
-                    // defaultTheme="system"
-                    // enableSystem
-                    // disableTransitionOnChange
-                >
+                <ThemeProvider attribute="class">
                     <Theme
                         id="theme-root"
                         accentColor={"grass"}
                         radius={"none"}
+                        asChild
                     >
                         <ScrollArea
-                            className="max-h-dvh"
+                            className="z-0 max-h-dvh"
                             type="auto"
                             scrollbars="vertical"
                             size="2"

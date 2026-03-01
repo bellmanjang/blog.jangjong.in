@@ -160,7 +160,7 @@ export const linkRenderer: Components["a"] = props => {
 };
 ```
 
-AST 트리를 탐색하면서 h1~6 태그에 중복 방지 처리된 id를 주입하는 플러그인 코드입니다.
+AST 트리를 탐색하면서 h1~h6 태그에 중복 방지 처리된 id를 주입하는 플러그인 코드입니다.
 
 ```ts
 import type { Element, Root } from "hast";
@@ -227,7 +227,7 @@ export const rehypeHeadingId: Plugin<[], Root> = () => {
 };
 ```
 
-Unordred list의 마커가 depth에 따라 ● -> ○ -> ■ -> □ 순으로 순환하도록 하기 위해 depth를 주입하는 플러그인 코드입니다.
+Unordered list의 마커가 depth에 따라 ● -> ○ -> ■ -> □ 순으로 순환하도록 하기 위해 depth를 주입하는 플러그인 코드입니다.
 
 ```ts
 import type { Element, Root } from "hast";
@@ -327,6 +327,67 @@ export const markdownOptions: Pick<
 
 <br/>
 
+# Table of Contents (TOC)
+
+글 내용을 한눈에 파악하고 원하는 섹션으로 빠르게 이동할 수 있도록 TOC 사이드바를 추가했습니다.  
+단순한 앵커 목록이 아니라, **현재 읽고 있는 흐름을 시각적으로 보여주는 것**에 초점을 맞췄어요.
+
+## Anchor 스크롤 처리
+
+앵커에 따른 스크롤 이동은 브라우저 기본 동작에 맡기지 않고, 직접 제어하도록 구성했습니다.
+
+### 기본 동작 제어 방식
+
+Headings / TOC 클릭 시 기본 동작을 `preventDefault`로 막고, `history.pushState`로 hash만 갱신했습니다.  
+실제 스크롤 이동은 useHashScroll 커스텀 훅에서만 수행하도록 해서 스크롤 로직의 책임을 한 곳으로 모았습니다.
+
+### 이렇게 분리한 이유
+
+- 스크롤 동작의 단일 진입점 확보
+- radix-ui ScrollArea에서도 일관된 동작 보장
+- 오프셋 보정, 애니메이션 커스터마이징 용이
+
+## TOC 트리 구성
+
+TOC 데이터는 마크다운 AST 단계에서 추출하는 방향으로 설계했습니다.
+
+`rehypeHeadingId` 플러그인에서 h1~h6 태그에 중복 방지된 id를 주입하고,  
+`rehypeCollectToc` 플러그인에서 heading의 depth / text / id 기반으로 트리 구조를 생성합니다.
+
+처음에 flat 구조도 고려했지만, '경로(path) 시각화'를 안정적으로 처리하려면 트리 구조가 더 적합하다고 판단했어요.
+
+## 활성 항목 추적
+
+현재 뷰포트에 보이는 heading 추적은 `IntersectionObserver`를 사용했습니다.
+
+### Observer 관리 전략
+
+구현하면서 특히 다음 부분을 신경 썼습니다.
+
+- Observer 싱글톤 관리
+- 상태 변경이 있는 경우에만 store 업데이트 (불필요한 rerender 방지)
+
+### rAF 기반 배치 처리
+
+스크롤 중 과도한 업데이트를 막기 위해, 다수의 entry를 rAF로 배치 처리했습니다.
+
+> `pendingEntries` 큐에 모았다가  
+> `requestAnimationFrame` 타이밍에 한 번에 처리
+
+이 방식으로 스크롤 중 발생하는 잦은 observer 콜백 비용을 줄였습니다.
+
+## 활성 경로 시각화
+
+단순히 현재 활성 항목만 강조하는 대신, **활성 항목까지의 전체 경로(path)**가 보이도록 구현했습니다.
+
+이를 위해 TOC 트리 데이터를 전처리해서 `nodeInPath`, `nextSiblingsInPath` 메타 정보를 생성했고,  
+렌더링 시에는 이 메타 정보만으로 '어떤 라인이 강조되어야 하는지'를 빠르게 판별하도록 했습니다.
+
+또한 상태를 단순 boolean 대신 `"active" | "hover" | false`로 구분해서  
+**현재 읽는 흐름 강조**와 **hover 피드백**을 일관된 방식으로 시각화했습니다.
+
+<br/>
+
 # TO-DO
 
 - [x] 공통 렌더링 블록 컴포넌트로 분리
@@ -346,7 +407,7 @@ export const markdownOptions: Pick<
         - [x] Strikethrough
         - [x] Autolinks
 - [x] CodeSandbox 블록
-- [ ] TOC(Table of Contents) 사이드바
+- [x] TOC(Table of Contents) 사이드바
 - [ ] 검색
 - [ ] 방문자 수
 - [ ] 댓글

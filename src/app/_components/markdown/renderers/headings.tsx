@@ -1,6 +1,6 @@
 import { Heading } from "@radix-ui/themes";
-import Link from "next/link";
 import type { Components } from "react-markdown";
+import { HeadingsAnchor } from "@/app/_components/markdown/renderers/headings-anchor";
 import { cx } from "@/lib/utils/class-util";
 
 export function createHeadingRenderer(
@@ -9,21 +9,18 @@ export function createHeadingRenderer(
     const tagName = `h${level}` as const;
 
     return props => {
-        const { node, color, children, className, ...rest } = props;
+        const { node, color, children, id, className, ...rest } = props;
 
         return (
             <Heading
                 as={tagName}
+                id={id}
                 className={cx("headings", className)}
                 {...rest}
                 tabIndex={0}
             >
                 <span className="relative">
-                    <Link
-                        className="md-anchor"
-                        href={`#${props.id}`}
-                        tabIndex={-1}
-                    />
+                    <HeadingsAnchor id={id} />
                     {children}
                 </span>
             </Heading>

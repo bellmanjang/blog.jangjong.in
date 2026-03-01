@@ -2,6 +2,7 @@ import { Link as RadixLink, Text } from "@radix-ui/themes";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { Components } from "react-markdown";
+import { handleHeadingsAnchorClick } from "@/app/_components/markdown/anchor";
 import { cx } from "@/lib/utils/class-util";
 
 export const linkRenderer: Components["a"] = props => {
@@ -28,7 +29,16 @@ export const linkRenderer: Components["a"] = props => {
 
     // Headings anchor
     if (href.startsWith("#")) {
-        return <RadixLink {...rest}>{children}</RadixLink>;
+        return (
+            <RadixLink
+                {...rest}
+                onClick={e =>
+                    handleHeadingsAnchorClick(e, href.replace("#", ""))
+                }
+            >
+                {children}
+            </RadixLink>
+        );
     }
 
     // GFM Autolinks

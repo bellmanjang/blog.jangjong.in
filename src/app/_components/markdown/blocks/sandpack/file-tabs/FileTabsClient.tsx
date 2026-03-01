@@ -3,7 +3,6 @@
 import { useSandpack } from "@codesandbox/sandpack-react/unstyled";
 import { Button, Flex, IconButton, ScrollArea, Text } from "@radix-ui/themes";
 import { XIcon } from "lucide-react";
-import { useState } from "react";
 import {
     calculateNearestUniquePath,
     getFileName,
@@ -13,7 +12,6 @@ export const FileTabsClient = () => {
     const { sandpack } = useSandpack();
 
     const { activeFile, visibleFiles, setActiveFile } = sandpack;
-    const [hoveredIndex, setIsHoveredIndex] = useState<null | number>(null);
 
     const getTriggerText = (currentPath: string): string => {
         const documentFileName = getFileName(currentPath);
@@ -110,10 +108,9 @@ export const FileTabsClient = () => {
                         <div
                             aria-controls={`${filePath}-tab-panel`}
                             aria-selected={filePath === activeFile}
+                            data-active={filePath === activeFile}
                             className="md-sp-tab-container"
                             onKeyDown={e => onKeyDown({ e, index })}
-                            onMouseEnter={() => setIsHoveredIndex(index)}
-                            onMouseLeave={() => setIsHoveredIndex(null)}
                             role="tab"
                             key={filePath}
                         >
@@ -122,7 +119,6 @@ export const FileTabsClient = () => {
                                 size="1"
                                 color="gray"
                                 variant="ghost"
-                                data-active={filePath === activeFile}
                                 id={`${filePath}-tab`}
                                 onClick={(): void => setActiveFile(filePath)}
                                 tabIndex={filePath === activeFile ? -1 : 0}
@@ -141,13 +137,6 @@ export const FileTabsClient = () => {
                                         ev.stopPropagation();
 
                                         sandpack.closeFile(filePath);
-                                    }}
-                                    style={{
-                                        visibility:
-                                            filePath === activeFile ||
-                                            hoveredIndex === index
-                                                ? "visible"
-                                                : "hidden",
                                     }}
                                     tabIndex={0}
                                 >

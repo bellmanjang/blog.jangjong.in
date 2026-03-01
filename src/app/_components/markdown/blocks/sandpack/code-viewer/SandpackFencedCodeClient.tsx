@@ -12,7 +12,7 @@ export const SandpackFencedCodeClient = ({
     lang: string;
 }) => {
     return (
-        <div className="md-fenced-code md-sp-fenced-code">
+        <div className="md-sp-fenced-code">
             <TextCopyButton text={code} />
             <ScrollArea scrollbars="both">
                 <HighlightedPre code={code} lang={lang} />

@@ -17,7 +17,6 @@ export const rehypeListDepth: Plugin<[Options?], Root> = opts => {
     } = opts ?? {};
 
     return tree => {
-        // DFS
         const walk = (node: any, listDepth: number) => {
             if (!node) return;
 

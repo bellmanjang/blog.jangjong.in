@@ -8,6 +8,9 @@ import {
     findAllPosts,
     getPostBySlug,
 } from "@/app/_features/posts/api/post-api";
+import { ClickTocIdResetter } from "@/app/_features/posts/components/ClickTocIdResetter";
+import { HashScroller } from "@/app/_features/posts/components/HashScroller";
+import { Toc } from "@/app/_features/posts/components/toc";
 import { formatDate } from "@/lib/utils/date-util";
 import { safeDecodeURIComponent } from "@/lib/utils/util";
 
@@ -43,8 +46,11 @@ export default async function PostPage(props: Params) {
                     {formatDate(post.publishedAt)}
                 </Text>
             </div>
-            <article className="px-6">
+            <article className="post relative px-6">
+                <ClickTocIdResetter />
+                <HashScroller />
                 <Markdown source={post.content} />
+                <Toc source={post.content} />
             </article>
         </section>
     );

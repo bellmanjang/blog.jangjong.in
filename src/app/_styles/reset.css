@@ -79,9 +79,12 @@ html {
     --focus-a12: var(--tomato-a12);
 
     --default-font-family: var(--font-sans);
-    --color-background: var(--gray-2);
+    --color-background: var(--gray-1);
+    @media (prefers-color-scheme: dark) {
+        --color-background: var(--gray-5);
+    }
 }
 
-#theme-root > .rt-ScrollAreaRoot > .rt-ScrollAreaViewport > * {
+#theme-root .rt-ScrollAreaViewport > * {
     width: 100%;
 }
