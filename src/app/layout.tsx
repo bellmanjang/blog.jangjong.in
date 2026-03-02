@@ -49,6 +49,18 @@ export const metadata: Metadata = {
         template: "%s | Jang Jong-in's Blog",
     },
     description: "느즈막이 시작한 개발자 블로그",
+    icons: {
+        icon: [
+            {
+                url: "/favicon-light.svg",
+                media: "(prefers-color-scheme: light)",
+            },
+            {
+                url: "/favicon-dark.svg",
+                media: "(prefers-color-scheme: dark)",
+            },
+        ],
+    },
     openGraph: {
         title: "Jang Jong-in's Blog",
         description: "느즈막이 시작한 개발자 블로그",
@@ -95,13 +107,9 @@ export default function RootLayout({
             </head>
             <body>
                 <ThemeProvider attribute="class">
-                    <Theme
-                        id="theme-root"
-                        accentColor={"grass"}
-                        radius={"none"}
-                        asChild
-                    >
+                    <Theme accentColor={"grass"} radius={"none"} asChild>
                         <ScrollArea
+                            id="app-scrollarea"
                             className="z-0 max-h-dvh"
                             type="auto"
                             scrollbars="vertical"

@@ -12,9 +12,7 @@ export const ClickTocIdResetter = () => {
         const el = ref.current;
         if (!el) return;
 
-        const viewport = el.closest(
-            "[data-radix-scroll-area-viewport]",
-        ) as HTMLElement | null;
+        const viewport = document.getElementById("app-scrollarea");
         if (!viewport) return;
 
         const reset = () => updateClickTocId(null);

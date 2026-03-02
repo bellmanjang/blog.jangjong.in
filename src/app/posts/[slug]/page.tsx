@@ -41,7 +41,7 @@ export default async function PostPage(props: Params) {
             >
                 {post.title}
             </Text>
-            <div className="mt-2 mb-8">
+            <div className="mt-2 mb-8 px-1">
                 <Text size="2" color="gray">
                     {formatDate(post.publishedAt)}
                 </Text>

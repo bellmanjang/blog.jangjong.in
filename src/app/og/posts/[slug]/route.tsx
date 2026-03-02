@@ -117,7 +117,7 @@ export async function GET(
                         {post.title}
                     </span>
                     <div
-                        tw="flex mt-2 mb-8 text-[24px] text-[#020A00A0]"
+                        tw="flex mt-2 mb-8 px-1 text-[24px] text-[#020A00A0]"
                         style={{
                             fontFamily: "PretendardRegular",
                         }}

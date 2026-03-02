@@ -15,7 +15,7 @@ import { ArrowUpRight, RotateCw } from "lucide-react";
 import React from "react";
 import { LoadingOverlayClient } from "@/app/_components/markdown/blocks/sandpack/preview/LoadingOverlayClient";
 
-export const PreviewClient = React.forwardRef<SandpackPreviewRef, PreviewProps>(
+const PreviewClient = React.forwardRef<SandpackPreviewRef, PreviewProps>(
     (
         {
             showNavigator = false,
@@ -145,3 +145,7 @@ export const PreviewClient = React.forwardRef<SandpackPreviewRef, PreviewProps>(
         );
     },
 );
+
+PreviewClient.displayName = "PreviewClient";
+
+export default PreviewClient;

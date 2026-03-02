@@ -3,7 +3,7 @@
 import { Text } from "@radix-ui/themes";
 import { Tooltip } from "radix-ui";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { handleHeadingsAnchorClick } from "@/app/_components/markdown/anchor";
 import type { TocNode } from "@/app/_components/markdown/rehype-collect-toc";
 import {
@@ -43,46 +43,27 @@ export const TocItem = ({
 
     const headingsInView = useTocStore(state => state.headingsInView);
     const hoverTocId = useTocStore(state => state.hoverTocId);
-    const observer = useTocStore(s => s.headingsObserver);
     const updateClickTocId = useTocStore(state => state.updateClickTocId);
-
-    useEffect(() => {
-        const heading = document.getElementById(id);
-        if (!heading) return;
-
-        const ob = observer;
-        if (!ob) return;
-
-        ob.observe(heading);
-
-        return () => {
-            ob.unobserve(heading);
-        };
-    }, [id, observer]);
 
     const selfActive = headingsInView.has(id);
     const selfHover = id === hoverTocId;
     const selfOrDescState = meta.nodeInPath.get(id) ?? false;
 
-    // 내 다음 형제에 active가 있는지
-    const hasActiveInNextSiblings: StateVal = parentId
+    // 내 뒤쪽 형제들의 state
+    const stateInNextSiblings: StateVal = parentId
         ? getEdge(meta.nextSiblingsInPath, parentId, id)
         : false;
 
     // 자식에게 내려줄 nextLineMask:
     // - draw: 내가 마지막이 아니면 부모 depth 컬럼 세로줄을 그린다
-    // - active: 내 뒤쪽 형제들 중 활성 서브트리가 있으면 활성색
+    // - state: 내 뒤쪽 형제들의 state
     const nextLineMask: LineCol[] =
         depth > 1
-            ? [...lineMask, { draw: !isLast, state: hasActiveInNextSiblings }]
+            ? [...lineMask, { draw: !isLast, state: stateInNextSiblings }]
             : lineMask;
 
     return (
-        <li
-            ref={ref}
-            className="toc-item relative max-w-8 transition-all xl:max-w-60"
-            data-roots={isRoot}
-        >
+        <li ref={ref} className="relative max-w-8 transition-all xl:max-w-60">
             <Tooltip.Root>
                 <Tooltip.Trigger asChild>
                     <a
@@ -92,7 +73,7 @@ export const TocItem = ({
                             selfActive
                                 ? "bg-[var(--accent-a3)]"
                                 : selfHover
-                                  ? "bg-[var(--focus-a2)]"
+                                  ? "bg-[var(--focus-a3)] text-[var(--accent-a12)] underline"
                                   : "",
                         )}
                         href={`#${id}`}
@@ -126,7 +107,7 @@ export const TocItem = ({
                                     ) : (
                                         <PathDrawings.VerticalAndRight
                                             selfState={selfOrDescState}
-                                            pathState={hasActiveInNextSiblings}
+                                            pathState={stateInNextSiblings}
                                         />
                                     )}
                                 </span>
@@ -158,7 +139,7 @@ export const TocItem = ({
                             } as React.CSSProperties
                         }
                         side="left"
-                        sideOffset={12}
+                        sideOffset={5}
                     >
                         <Text className="px-2 font-medium text-[var(--gray-1)] text-sm">
                             {text}

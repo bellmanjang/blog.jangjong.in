@@ -1,5 +1,13 @@
 @reference "tailwindcss";
 
+#app-scrollarea > * {
+    width: 100%;
+}
+
+#app-scrollarea {
+    scroll-behavior: smooth;
+}
+
 .nav-scroll-area {
     max-width: calc(min(var(--layout-max-w),100vw) - var(--layout-px) * 2 - var(--navbar-gap) * 2 - var(--res-logo-symbol-w) - var(--nav-blog-w));
 
@@ -9,21 +17,15 @@
 }
 
 .toc {
-    top: var(--toc-top);
-    bottom: var(--toc-bottom);
-    right: var(--toc-margin);
-    max-width: calc((100vw - min(var(--layout-max-w),100vw)) / 2 - var(--toc-margin)) !important;
-    max-height: calc(100dvh - var(--toc-top) - var(--toc-bottom) - var(--toc-margin)) !important;
+    top: var(--toc-top) !important;
+    right: var(--toc-mx) !important;
+    max-width: calc((100vw - min(var(--layout-max-w),100vw)) / 2 - var(--toc-mx)) !important;
+    max-height: calc(100dvh - var(--toc-top) * 2) !important;
 }
 
-.toc-item[data-roots="true"] {
-    &:first-of-type {
-        @apply pt-1;
-    }
-
-    &:last-of-type {
-        @apply pb-1;
-    }
+.toc [data-radix-scroll-area-viewport] ~ [data-orientation="vertical"] {
+    left: 0 !important;
+    right: auto !important;
 }
 
 .toc-tooltip-content {
@@ -33,7 +35,7 @@
 }
 
 .post {
-    @media screen and (max-width: 936px) {
-        margin-right: 40px;
+    @media screen and (max-width: 916px) {
+        margin-right: 20px;
     }
 }

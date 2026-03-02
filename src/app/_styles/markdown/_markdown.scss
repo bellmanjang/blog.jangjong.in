@@ -12,6 +12,12 @@
 }
 
 /* ATX headings */
+.prose :is(h1,h2,h3,h4,h5,h6) {
+    @apply relative outline-none;
+
+    scroll-margin-top: var(--navbar-h);
+}
+
 .prose h1 {
     @apply text-4xl tracking-tight mt-12 mb-4;
 }
@@ -37,29 +43,25 @@
 }
 
 .prose .md-anchor {
-    @apply invisible absolute -ml-[1ch] no-underline text-[var(--border-gray)];
+    @apply relative no-underline hover:underline;
 
-    width: calc(100% + 1ch);
+    &:before {
+        @apply invisible absolute -left-[1ch] pr-[1ch] text-[var(--border-gray)];
 
-    &:after {
         content: "#";
     }
 
     &:hover {
-        .prose p {
-            @apply my-4 text-neutral-800 dark:text-neutral-200;
+        &:before {
+            @apply visible;
         }
-
-        @apply visible;
     }
 }
 
-.prose .headings:hover .md-anchor {
-    @apply visible;
-}
-
-.prose .headings:focus-visible .md-anchor {
-    @apply visible;
+.prose .md-anchor:focus-visible {
+    &:before {
+        @apply visible;
+    }
 }
 
 /* Paragraphs */
@@ -120,11 +122,7 @@ ul {
 
 /* Fenced code */
 .prose .md-fenced-code {
-    @apply relative h-full p-1 border border-[var(--accent-a8)] bg-[var(--block-wrapper-bg)];
-}
-
-.prose > .md-fenced-code {
-    @apply mb-4;
+    @apply relative h-full mb-4 p-1 border border-[var(--accent-a8)] bg-[var(--block-wrapper-bg)];
 }
 
 .prose .md-code-copy-btn-wrapper {

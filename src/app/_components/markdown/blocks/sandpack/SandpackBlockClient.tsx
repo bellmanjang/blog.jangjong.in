@@ -5,11 +5,15 @@ import {
     SandpackProvider,
 } from "@codesandbox/sandpack-react/unstyled";
 import { Flex } from "@radix-ui/themes";
+import dynamic from "next/dynamic";
 import { CodeViewerClient } from "@/app/_components/markdown/blocks/sandpack/code-viewer/CodeViewerClient";
 import { FileExplorerClient } from "@/app/_components/markdown/blocks/sandpack/file-explorer/FileExplorerClient";
 import { FileTabsClient } from "@/app/_components/markdown/blocks/sandpack/file-tabs/FileTabsClient";
-import { PreviewClient } from "@/app/_components/markdown/blocks/sandpack/preview/PreviewClient";
 import type { SandpackPayload } from "@/app/_components/markdown/remark-sandpack";
+
+const PreviewClient = dynamic(() => import("./preview/PreviewClient"), {
+    ssr: false,
+});
 
 export const SandpackBlockClient = ({
     template,

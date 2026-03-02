@@ -84,7 +84,3 @@ html {
         --color-background: var(--gray-5);
     }
 }
-
-#theme-root .rt-ScrollAreaViewport > * {
-    width: 100%;
-}
