@@ -1,6 +1,5 @@
 import { Heading } from "@radix-ui/themes";
 import type { Components } from "react-markdown";
-import { HeadingsAnchor } from "@/app/_components/markdown/renderers/headings-anchor";
 import { cx } from "@/lib/utils/class-util";
 
 export function createHeadingRenderer(
@@ -15,14 +14,11 @@ export function createHeadingRenderer(
             <Heading
                 as={tagName}
                 id={id}
-                className={cx("headings", className)}
+                className={cx("text-balance", className)}
                 {...rest}
-                tabIndex={0}
+                tabIndex={-1}
             >
-                <span className="relative">
-                    <HeadingsAnchor id={id} />
-                    {children}
-                </span>
+                {children}
             </Heading>
         );
     };

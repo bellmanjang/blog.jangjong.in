@@ -1,22 +1,18 @@
 import { useEffect, useMemo, useRef } from "react";
-import type { TocNode } from "@/app/_components/markdown/rehype-collect-toc";
 import { useTocStore } from "@/app/_features/posts/store/toc-store";
-import { flattenTocIds } from "@/app/_features/posts/util/toc-util";
 
 export const useTocAutoScroll = ({
     rootRef,
-    tocRoots,
+    tocOrderIds,
 }: {
     rootRef: React.RefObject<HTMLUListElement | null>;
-    tocRoots: TocNode[];
+    tocOrderIds: string[];
 }) => {
     const scrollRafRef = useRef<number | null>(null);
     const lastScrolledIdRef = useRef<string | null>(null);
 
     const headingsInView = useTocStore(state => state.headingsInView);
     const clickTocId = useTocStore(state => state.clickTocId);
-
-    const tocOrderIds = useMemo(() => flattenTocIds(tocRoots), [tocRoots]);
 
     const activeId = useMemo(() => {
         if (clickTocId) return clickTocId;
@@ -40,7 +36,7 @@ export const useTocAutoScroll = ({
 
             const target = rootEl.querySelector(
                 `a[data-toc-id="${CSS.escape(activeId)}"]`,
-            ) as HTMLElement | null;
+            );
             if (!target) return;
 
             target.scrollIntoView({ block: "center", behavior: "smooth" });

@@ -1,8 +1,8 @@
 import type { StateVal } from "@/app/_features/posts/util/toc-util";
 
 export const inactiveColor = "var(--gray-a6)";
-export const activeColor = "var(--accent-a11)";
-export const hoverColor = "var(--focus-a5)";
+export const activeColor = "var(--accent-a8)";
+export const hoverColor = "var(--focus-a8)";
 
 const VerticalAndRight = ({
     selfState,

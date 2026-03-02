@@ -1,6 +1,7 @@
 import type { Element, Root } from "hast";
 import type { Plugin } from "unified";
 import {
+    getHeadingLevel,
     getTextContent,
     HEADING_TAGS,
 } from "@/app/_components/markdown/rehype-heading-id";
@@ -39,7 +40,7 @@ export const rehypeCollectToc: Plugin<[], Root> = () => {
                 const el = node as Element;
 
                 if (HEADING_TAGS.has(el.tagName)) {
-                    const depth = Number(el.tagName.slice(1));
+                    const depth = getHeadingLevel(el.tagName);
                     const text = getTextContent(el).trim();
                     const id: string | undefined = (el.properties as any)?.id;
 

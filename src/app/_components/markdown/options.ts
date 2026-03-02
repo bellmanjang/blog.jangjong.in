@@ -4,8 +4,10 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { rehypeCollectToc } from "@/app/_components/markdown/rehype-collect-toc";
+import { rehypeHeadingAnchor } from "@/app/_components/markdown/rehype-heading-anchor";
 import { rehypeHeadingId } from "@/app/_components/markdown/rehype-heading-id";
 import { rehypeListDepth } from "@/app/_components/markdown/rehype-list-depth";
+import { rehypeWrapSections } from "@/app/_components/markdown/rehype-wrap-sections";
 import { remarkSandpack } from "@/app/_components/markdown/remark-sandpack";
 import { blockquoteRenderer } from "@/app/_components/markdown/renderers/blockquote";
 import { preRenderer } from "@/app/_components/markdown/renderers/fenced-code";
@@ -27,6 +29,8 @@ export const markdownOptions: Pick<
         rehypeRaw,
         rehypeKatex,
         rehypeHeadingId,
+        rehypeHeadingAnchor,
+        rehypeWrapSections,
         rehypeCollectToc,
         rehypeListDepth,
     ],

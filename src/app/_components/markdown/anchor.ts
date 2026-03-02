@@ -5,20 +5,16 @@ export function handleHeadingsAnchorClick(e: React.MouseEvent, id: string) {
 }
 
 export function scrollToHeadingsAnchor(id: string) {
-    const target = document.getElementById(id);
-    if (!target) return;
+    const post = document.querySelector(".post");
+    if (!post) return;
 
-    const viewport = target.closest(
-        "[data-radix-scroll-area-viewport]",
-    ) as HTMLElement | null;
+    const section = post.querySelector(
+        `section[data-toc-id="${CSS.escape(id)}"]`,
+    );
+    if (!section) return;
 
-    if (!viewport) return;
+    const heading = section.querySelector("h1,h2,h3,h4,h5,h6");
+    const target = (heading ?? section) as HTMLElement;
 
-    // viewport 기준 오프셋 계산
-    const top =
-        target.getBoundingClientRect().top -
-        viewport.getBoundingClientRect().top +
-        viewport.scrollTop;
-
-    viewport.scrollTo({ top: top - 50, behavior: "smooth" });
+    target.scrollIntoView({ block: "start", behavior: "smooth" });
 }
