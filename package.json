@@ -7,12 +7,12 @@
     "dev": "next dev",
     "build": "pnpm lint && next build",
     "start": "next start",
-    "lint:biome": "biome check --diagnostic-level=error",
-    "lint:biome:fix": "biome check --write --diagnostic-level=error",
+    "lint": "pnpm lint:eslint:build && pnpm lint:eslint && pnpm lint:biome",
     "lint:eslint": "eslint .",
-    "lint": "pnpm lint:biome && pnpm lint:eslint",
-    "build:plugin": "pnpm --filter @bellmanjang/eslint-fsd-next-app build",
-    "test:plugin": "pnpm --filter @bellmanjang/eslint-fsd-next-app test"
+    "lint:eslint:build": "pnpm --filter @bellmanjang/eslint-fsd-next-app build",
+    "lint:eslint:test": "pnpm --filter @bellmanjang/eslint-fsd-next-app test",
+    "lint:biome": "biome check --diagnostic-level=error",
+    "lint:biome:fix": "biome check --write --diagnostic-level=error"
   },
   "dependencies": {
     "@codesandbox/sandpack-client": "^2.19.8",
