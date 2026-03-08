@@ -1,0 +1,60 @@
+import type { Element, Root } from "hast";
+import type { Plugin } from "unified";
+
+function slugify(str: unknown) {
+    return String(str)
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/&/g, "-and-")
+        .replace(/[^\w[가-힣]-]+/g, "")
+        .replace(/--+/g, "-");
+}
+
+export function getTextContent(node: any): string {
+    if (!node) return "";
+    if (node.type === "text") return node.value ?? "";
+    if (Array.isArray(node.children)) {
+        return node.children.map(getTextContent).join("");
+    }
+    return "";
+}
+
+export const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
+
+export function getHeadingLevel(tag: string) {
+    return Number(tag.slice(1));
+}
+
+export const headingId: Plugin<[], Root> = () => {
+    return tree => {
+        const used = new Set<string>();
+
+        const walk = (node: any) => {
+            if (!node) return;
+
+            if (node.type === "element") {
+                const el = node as Element;
+
+                if (HEADING_TAGS.has(el.tagName)) {
+                    const rawText = getTextContent(el);
+                    const base = slugify(rawText) || "section";
+
+                    let id = base;
+                    let i = 2;
+                    while (used.has(id)) id = `${base}-${i++}`;
+                    used.add(id);
+
+                    el.properties ??= {};
+                    (el.properties as any).id = id;
+                }
+            }
+
+            if (Array.isArray(node.children)) {
+                for (const child of node.children) walk(child);
+            }
+        };
+
+        walk(tree);
+    };
+};

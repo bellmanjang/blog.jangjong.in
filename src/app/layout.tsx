@@ -4,11 +4,10 @@ import { ScrollArea, Theme } from "@radix-ui/themes";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { Inconsolata } from "next/font/google";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
-import { Navbar } from "@/app/_components/layout/navbar";
-import { cx } from "@/lib/utils/class-util";
+import { cx } from "@/shared/lib";
+import { Navbar } from "@/shared/ui";
 
 const pretendard = localFont({
     src: [
@@ -37,8 +36,20 @@ const pretendard = localFont({
     display: "swap",
     preload: true,
 });
-const inconsolata = Inconsolata({
-    variable: "--font-inconsolata",
+const jetbrains_mono = localFont({
+    src: [
+        {
+            path: "../../public/fonts/JetBrainsMono/JetBrainsMono-Regular.woff2",
+            weight: "400",
+            style: "normal",
+        },
+        {
+            path: "../../public/fonts/JetBrainsMono/JetBrainsMono-Medium.woff2",
+            weight: "500",
+            style: "normal",
+        },
+    ],
+    variable: "--font-jetbrains-mono",
     display: "swap",
 });
 
@@ -93,7 +104,7 @@ export default function RootLayout({
             suppressHydrationWarning
             className={cx(
                 pretendard.variable,
-                inconsolata.variable,
+                jetbrains_mono.variable,
                 "overflow-hidden font-sans",
             )}
         >

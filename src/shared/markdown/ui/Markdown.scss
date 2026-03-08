@@ -1,0 +1,253 @@
+@use "../../ui/tokens/variables";
+
+@reference "tailwindcss";
+
+.prose {
+    --block-wrapper-bg: var(--gray-a5);
+    --fenced-code-bg: var(--gray-3);
+    --border-gray: var(--gray-a6);
+}
+
+/* Thematic breaks */
+.prose hr {
+    @apply h-1 my-6 p-0 border-0 bg-[var(--border-gray)];
+}
+
+/* ATX headings */
+.prose :is(h1,h2,h3,h4,h5,h6) {
+    @apply relative outline-none;
+
+    scroll-margin-top: var(--navbar-h);
+}
+
+.prose h1 {
+    @apply text-4xl tracking-tight mt-20 mb-8;
+}
+
+.prose h2 {
+    @apply text-3xl tracking-tight mt-10 mb-4;
+}
+
+.prose h3 {
+    @apply text-xl tracking-tight mt-6 mb-4;
+}
+
+.prose h4 {
+    @apply text-lg tracking-tight mt-6 mb-4;
+}
+
+.prose h5 {
+    @apply text-base tracking-tight mt-6 mb-4;
+}
+
+.prose h6 {
+    @apply text-base tracking-tight mt-6 mb-4 text-[var(--gray-10)];
+}
+
+.prose .md-anchor {
+    @apply relative no-underline hover:underline;
+
+    &:before {
+        @apply invisible absolute -left-[1ch] pr-[1ch] text-[var(--border-gray)];
+
+        content: "#";
+    }
+
+    &:hover {
+        &:before {
+            @apply visible;
+        }
+    }
+}
+
+.prose .md-anchor:focus-visible {
+    &:before {
+        @apply visible;
+    }
+}
+
+/* Paragraphs */
+.prose p {
+    @apply mb-4;
+}
+
+/* Block quotes */
+.prose blockquote {
+    @apply mb-4;
+}
+
+/* Lists */
+.prose ol,
+ul {
+    @apply m-0 pl-5;
+
+    &[data-depth="0"] {
+        @apply mb-4;
+    }
+}
+
+.prose ol {
+    @apply list-decimal;
+}
+
+.prose ul {
+    @apply list-none;
+
+    & > li {
+        @apply relative pl-1;
+    }
+
+    & > li:not(.task-list-item)::before {
+        @apply absolute -left-6 top-0 w-6 h-6 bg-current;
+    }
+
+    &[data-depth="0"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("disc.svg") no-repeat center / contain;
+    }
+
+    &[data-depth="1"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("circle.svg") no-repeat center / contain;
+    }
+
+    &[data-depth="2"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("square.svg") no-repeat center / contain;
+    }
+
+    &[data-depth="3"] > li:not(.task-list-item)::before {
+        content: "";
+        mask: url("box.svg") no-repeat center / contain;
+    }
+}
+
+/* Fenced code */
+.prose .md-fenced-code {
+    @apply relative h-full mb-4 p-1 border border-[var(--accent-a8)] bg-[var(--block-wrapper-bg)];
+}
+
+.prose .md-code-copy-btn-wrapper {
+    @apply absolute top-4 right-4 z-10 bg-[var(--gray-1)];
+}
+
+.prose .md-pre-wrapper {
+    @apply relative h-full text-sm font-mono font-medium bg-[var(--fenced-code-bg)];
+
+    padding: 0 var(--expandable-box-gradient-h) var(--expandable-box-gradient-h) 0 !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr));
+        width: 1px;
+        background-color: var(--border-gray);
+        pointer-events: none;
+    }
+}
+
+.prose .md-pre-wrapper pre {
+    @apply w-full h-full !overflow-visible;
+
+    padding: 0 !important;
+    outline-offset: -1px;
+}
+
+.prose .md-pre-wrapper pre > code {
+    @apply inline-block w-full h-full;
+}
+
+.prose .md-pre-wrapper pre > code span.linenumber {
+    min-width: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr)) !important;
+    padding-left: var(--code-linenumber-pl) !important;
+    padding-right: var(--code-linenumber-pr) !important;
+    margin-right: 0.5ch;
+}
+
+/* Mermaid */
+.prose .md-fenced-code .md-mermaid {
+    @apply bg-[var(--fenced-code-bg)];
+
+    & > svg {
+        @apply m-auto
+    }
+}
+
+/* Inline code */
+.prose .md-inline-code {
+    @apply py-0.5 px-1 bg-[var(--block-wrapper-bg)] text-sm font-mono font-medium;
+}
+
+/* Links */
+.prose .md-link {
+    @apply underline decoration-[var(--border-gray)] underline-offset-2 decoration-[0.1em];
+
+    & .open-in-new-tab {
+        @apply inline-block align-middle;
+
+        transform: translate(0);
+    }
+}
+
+.prose .md-link:hover {
+    & .open-in-new-tab {
+        transform: translate(0.075em, -0.075em);
+    }
+}
+
+/* Images */
+.prose .md-image {
+    @apply flex flex-col mb-4 p-1 bg-[var(--block-wrapper-bg)];
+}
+
+.prose .md-image-caption {
+    @apply flex w-full overflow-hidden;
+
+    max-height: 0;
+    margin-top: 0;
+    opacity: 0;
+    transform: translateY(-2px);
+
+    transition: max-height 200ms ease,
+    margin-top 200ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.prose .md-image:hover > .md-image-caption {
+    max-height: fit-content;
+    margin-top: 4px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.prose .md-image > .md-image-caption:focus-visible {
+    max-height: fit-content;
+    margin-top: 4px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tables */
+.prose .md-table {
+    @apply inline-block mb-4 p-1 bg-[var(--block-wrapper-bg)];
+}
+
+/* Task list items */
+.prose .md-checkbox {
+    @apply pointer-events-none absolute top-0 -left-6 w-6 h-6 flex items-center justify-center;
+}
+
+/* Remove Safari input shadow on mobile */
+.prose input[type="text"],
+input[type="email"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.prose > :last-child {
+    margin-bottom: 0;
+}

@@ -1,0 +1,48 @@
+import type { Element, Root } from "hast";
+import type { Plugin } from "unified";
+import type { HeadingNode } from "../../types";
+import { getHeadingLevel, getTextContent, HEADING_TAGS } from "./heading-id";
+
+export const collectHeadingTree: Plugin<[], Root> = () => {
+    return (tree, file) => {
+        const root: HeadingNode[] = [];
+        const stack: HeadingNode[] = [];
+
+        const pushNode = (node: HeadingNode) => {
+            while (
+                stack.length > 0 &&
+                stack[stack.length - 1].depth >= node.depth
+            ) {
+                stack.pop();
+            }
+
+            if (stack.length === 0) root.push(node);
+            else stack[stack.length - 1].children.push(node);
+
+            stack.push(node);
+        };
+
+        const walk = (node: any) => {
+            if (!node) return;
+
+            if (node.type === "element") {
+                const el = node as Element;
+
+                if (HEADING_TAGS.has(el.tagName)) {
+                    const depth = getHeadingLevel(el.tagName);
+                    const text = getTextContent(el).trim();
+                    const id: string | undefined = (el.properties as any)?.id;
+
+                    if (id) pushNode({ depth, text, id, children: [] });
+                }
+            }
+
+            if (Array.isArray(node.children)) {
+                for (const child of node.children) walk(child);
+            }
+        };
+
+        walk(tree);
+        (file.data as any).toc = root;
+    };
+};

@@ -9,6 +9,9 @@
         "ignoreUnknown": false,
         "includes": [
             "./src/**",
+            "./packages/*/src/**",
+            "./scripts/**",
+            "./*.{js,mjs,cjs,ts,mts,cts}",
             "!**/*.css",
             "!**/*.scss",
             "!**/build",

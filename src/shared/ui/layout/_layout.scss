@@ -1,0 +1,9 @@
+@reference "tailwindcss";
+
+#app-scrollarea > * {
+    width: 100%;
+}
+
+#app-scrollarea {
+    scroll-behavior: smooth;
+}

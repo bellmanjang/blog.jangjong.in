@@ -1,6 +1,5 @@
-import { HeroPost } from "@/app/_components/layout/hero-post";
-import { findAllPosts, pickHero } from "@/app/_features/posts/api/post-api";
-import { Posts } from "@/app/_features/posts/components/posts";
+import { findAllPosts, pickHero } from "@/entities/post";
+import { HeroArticle, List } from "@/widgets/post";
 
 export default function Page() {
     const posts = findAllPosts();
@@ -9,9 +8,9 @@ export default function Page() {
 
     return (
         <>
-            {hero && <HeroPost {...hero} />}
+            {hero && <HeroArticle {...hero} />}
             <div className="my-8">
-                <Posts posts={rest} />
+                <List posts={rest} />
             </div>
         </>
     );
