@@ -1,0 +1,1 @@
+export { MermaidConfig } from "./MermaidConfig";

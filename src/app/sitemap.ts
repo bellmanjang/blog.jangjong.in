@@ -1,4 +1,4 @@
-import { findAllPosts } from "@/app/_features/posts/api/post-api";
+import { findAllPosts } from "@/entities/post";
 
 export default async function sitemap() {
     const posts = findAllPosts().map(post => ({

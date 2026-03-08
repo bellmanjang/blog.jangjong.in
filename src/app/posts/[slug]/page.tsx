@@ -2,17 +2,10 @@ import { Text } from "@radix-ui/themes";
 import { parseISO } from "date-fns";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { Markdown } from "@/app/_components/markdown/md";
-import {
-    buildJsonLd,
-    findAllPosts,
-    getPostBySlug,
-} from "@/app/_features/posts/api/post-api";
-import { ClickTocIdResetter } from "@/app/_features/posts/components/ClickTocIdResetter";
-import { HashScroller } from "@/app/_features/posts/components/HashScroller";
-import { Toc } from "@/app/_features/posts/components/toc";
-import { formatDate } from "@/lib/utils/date-util";
-import { safeDecodeURIComponent } from "@/lib/utils/util";
+import { findAllPosts, getPostBySlug } from "@/entities/post";
+import { formatDate, safeDecodeURIComponent } from "@/shared/lib";
+import { Article } from "@/widgets/post";
+import { buildJsonLd } from "./build-json-ld";
 
 export const dynamicParams = false;
 
@@ -46,12 +39,7 @@ export default async function PostPage(props: Params) {
                     {formatDate(post.publishedAt)}
                 </Text>
             </div>
-            <article className="post relative px-6">
-                <ClickTocIdResetter />
-                <HashScroller />
-                <Markdown source={post.content} />
-                <Toc source={post.content} />
-            </article>
+            <Article post={post} />
         </section>
     );
 }

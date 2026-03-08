@@ -1,0 +1,9 @@
+@use "../tokens/variables";
+
+.nav_scroll_area {
+    max-width: calc(min(var(--layout-max-w),100vw) - var(--layout-px) * 2 - var(--navbar-gap) * 2 - var(--res-logo-symbol-w) - var(--nav-blog-w));
+
+    @media screen and (min-width: 768px) {
+        max-width: calc(min(var(--layout-max-w),100vw) - var(--layout-px) * 2 - var(--navbar-gap) * 2 - var(--res-logo-text-w) - var(--nav-blog-w));
+    }
+}

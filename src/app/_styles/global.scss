@@ -1,5 +1,2 @@
-@use "tokens/variables";
-@use "layout/layout";
-@use "markdown/markdown";
-@use "markdown/sandpack";
-@use "ui/expandable-box";
+@use "@/shared/ui/tokens/variables";
+@use "@/shared/ui/layout/layout";

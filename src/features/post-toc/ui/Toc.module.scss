@@ -1,0 +1,23 @@
+@use "@/shared/ui/tokens/variables";
+
+.toc {
+    top: var(--toc-top) !important;
+    right: var(--toc-mx) !important;
+    max-width: calc((100vw - min(var(--layout-max-w),100vw)) / 2 - var(--toc-mx)) !important;
+    max-height: calc(100dvh - var(--toc-top) * 2) !important;
+}
+
+.toc [data-radix-scroll-area-viewport] > div {
+    max-width: 100%;
+}
+
+.toc [data-radix-scroll-area-viewport] ~ [data-orientation="vertical"] {
+    left: 0 !important;
+    right: auto !important;
+}
+
+.toc_tooltip_content {
+    @media screen and (min-width: 1280px) {
+        transform: translateX(calc((var(--depth) - 1) * -20px));
+    }
+}

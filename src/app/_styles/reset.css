@@ -3,7 +3,7 @@
 
 @theme {
     --font-sans: var(--font-pretendard);
-    --font-mono: var(--font-inconsolata);
+    --font-mono: var(--font-jetbrains-mono);
 }
 
 :root {

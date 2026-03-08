@@ -1,7 +1,8 @@
-import { findAllPosts } from "@/app/_features/posts/api/post-api";
-import { Posts } from "@/app/_features/posts/components/posts";
+import type { Metadata } from "next";
+import { findAllPosts } from "@/entities/post";
+import { List } from "@/widgets/post";
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "Posts",
 };
 
@@ -10,7 +11,7 @@ export default function PostsPage() {
 
     return (
         <section>
-            <Posts posts={posts} />
+            <List posts={posts} />
         </section>
     );
 }

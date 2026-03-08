@@ -1,0 +1,17 @@
+@use "@/shared/ui/tokens/variables";
+
+@reference "tailwindcss";
+
+.gradient {
+    &:before {
+        --gradient-color: var(--gray-2);
+        @media (prefers-color-scheme: dark) {
+            --gradient-color: var(--gray-4);
+        }
+
+        @apply pointer-events-none absolute inset-0 opacity-90;
+
+        content: "";
+        background: linear-gradient(180deg, #0000, var(--gradient-color) 70%);
+    }
+}
