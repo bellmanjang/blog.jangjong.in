@@ -38,6 +38,7 @@ node_modules
 
 # production
 /build
+/_posts/_index.json
 
 # vercel
 .vercel

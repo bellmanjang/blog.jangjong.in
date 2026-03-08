@@ -70,7 +70,7 @@ export const TocItem = ({
                             selfActive
                                 ? "bg-[var(--accent-a3)]"
                                 : selfHover
-                                  ? "bg-[var(--focus-a3)] text-[var(--accent-a12)] underline"
+                                  ? "bg-[var(--focus-a2)] text-[var(--accent-a12)] underline"
                                   : "",
                         )}
                         href={`#${id}`}

@@ -1,0 +1,73 @@
+@reference "tailwindcss";
+
+.list {
+    @apply flex flex-col gap-3;
+}
+
+.group {
+    @apply flex flex-col gap-0.5;
+}
+
+.group_label {
+    @apply block py-1 px-2 font-semibold text-sm text-[var(--gray-11)] tabular-nums;
+}
+
+.group_label_placeholder {
+    @apply invisible;
+}
+
+.items {
+    @apply m-0 list-none p-0;
+}
+
+.link {
+    @apply flex items-stretch rounded-[var(--radius-2)] mx-2 text-[var(--gray-12)] no-underline transition-colors;
+}
+
+.branch {
+    @apply relative block w-5 shrink-0 text-[var(--gray-a6)] transition-colors;
+}
+
+.link:is(:hover, :focus-visible) .branch {
+    @apply text-[var(--accent-a8)];
+}
+
+.branch_stem {
+    @apply absolute left-1/2 block w-1 -translate-x-1/2 bg-current;
+}
+
+.branch_stem_full {
+    @apply inset-y-0;
+}
+
+.branch_stem_half {
+    @apply top-0;
+
+    bottom: calc(50% - 2px);
+}
+
+.branch_horizontal {
+    @apply absolute top-1/2 right-0 block h-1 -translate-y-1/2 bg-current;
+
+    left: calc(50% - 2px);
+}
+
+.content {
+    @apply flex min-w-0 flex-1 flex-col gap-1 py-2 px-5;
+}
+
+.link:is(:hover, :focus-visible) .content {
+    @apply bg-[var(--focus-a2)] text-[var(--accent-a12)] no-underline outline-none;
+}
+
+.title {
+    @apply block font-medium wrap-anywhere;
+}
+
+.link:is(:hover, :focus-visible) .title {
+    @apply underline;
+}
+
+.date {
+    @apply inline-block tabular-nums transition-colors;
+}

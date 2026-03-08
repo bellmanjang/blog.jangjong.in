@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { findAllPosts } from "@/entities/post";
-import { List } from "@/widgets/post";
+import { SearchableList } from "@/widgets/post";
 
 export const metadata: Metadata = {
     title: "Posts",
@@ -11,7 +11,7 @@ export default function PostsPage() {
 
     return (
         <section>
-            <List posts={posts} />
+            <SearchableList posts={posts} />
         </section>
     );
 }

@@ -1,0 +1,7 @@
+@use "@/shared/ui/tokens/variables";
+
+@reference "tailwindcss";
+
+.list_overlay {
+    background: color-mix(in srgb, var(--gray-4) 40%, transparent);
+}
