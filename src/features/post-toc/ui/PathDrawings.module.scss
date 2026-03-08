@@ -1,0 +1,9 @@
+@use "@/shared/ui/tokens/variables";
+
+@reference "tailwindcss";
+
+.drawing {
+    & > span {
+        @apply transition;
+    }
+}

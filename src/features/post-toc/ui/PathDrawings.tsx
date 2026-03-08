@@ -1,4 +1,6 @@
+import { cx } from "@/shared/lib";
 import type { StateVal } from "../lib/toc";
+import styles from "./PathDrawings.module.scss";
 
 export const inactiveColor = "var(--gray-a6)";
 export const activeColor = "var(--accent-a8)";
@@ -12,7 +14,7 @@ const VerticalAndRight = ({
     pathState: StateVal;
 }) => {
     return (
-        <span className="relative inline-block h-7 w-5">
+        <span className={cx(styles.drawing, "relative inline-block h-7 w-5")}>
             <span
                 className="absolute top-0 bottom-[12px] left-1/2 inline-block w-1 -translate-x-0.5"
                 style={{
@@ -52,7 +54,7 @@ const VerticalAndRight = ({
 
 const UpAndRight = ({ state }: { state: StateVal }) => {
     return (
-        <span className="relative inline-block h-7 w-5">
+        <span className={cx(styles.drawing, "relative inline-block h-7 w-5")}>
             <span
                 className="absolute top-0 bottom-[12px] left-1/2 inline-block w-1 -translate-x-0.5"
                 style={{
@@ -81,7 +83,7 @@ const UpAndRight = ({ state }: { state: StateVal }) => {
 
 const Vertical = ({ state }: { state: StateVal }) => {
     return (
-        <span className="relative inline-block h-7 w-5">
+        <span className={cx(styles.drawing, "relative inline-block h-7 w-5")}>
             <span
                 className="absolute top-0 bottom-0 left-1/2 inline-block w-1 -translate-x-0.5"
                 style={{

@@ -1,2 +1,7 @@
-export { findAllPosts, getPostBySlug, pickHero } from "./api/post";
-export type { Post, SearchDoc } from "./model/types";
+export {
+    findAllPosts,
+    getPostBySlug,
+    pickHero,
+    readAllPosts,
+} from "./api/post";
+export type { Post } from "./model/types";
