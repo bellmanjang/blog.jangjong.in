@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "pnpm prebuild:lint && next build",
-    "prebuild:lint": "pnpm lint:eslint:build && lint:eslint:test && pnpm lint",
+    "prebuild:lint": "pnpm lint:eslint:build && pnpm lint:eslint:test && pnpm lint",
     "start": "next start",
     "lint": "pnpm lint:eslint && pnpm lint:biome",
     "lint:eslint": "eslint .",
