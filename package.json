@@ -1,18 +1,26 @@
 {
   "name": "blog.jangjong.in",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "pnpm prebuild:lint && next build",
-    "prebuild:lint": "pnpm lint:eslint:build && pnpm lint:eslint:test && pnpm lint",
-    "postbuild": "tsx scripts/build-search-index.ts",
-    "start": "next start",
-    "lint": "pnpm lint:eslint && pnpm lint:biome",
+    "dev": "bun --bun next dev",
+    "build": "bun --bun next build",
+    "postbuild": "bun scripts/build-search-index.ts",
+    "start": "bun --bun next start",
+
+    "validate": "bun run lint:eslint:test && bun run lint:eslint:build && bun run lint",
+    "test": "bun test ./src",
+    "test:e2e": "bun run build && playwright test",
+    "test:all": "bun run validate && bun run test && bun run test:e2e",
+
+    "lint": "bun run lint:eslint && bun run lint:biome",
     "lint:eslint": "eslint .",
-    "lint:eslint:build": "pnpm --filter @bellmanjang/eslint-fsd-next-app build",
-    "lint:eslint:test": "pnpm --filter @bellmanjang/eslint-fsd-next-app test",
+    "lint:eslint:test": "bun run --filter @bellmanjang/eslint-fsd-next-app test",
+    "lint:eslint:build": "bun run --filter @bellmanjang/eslint-fsd-next-app build",
     "lint:biome": "biome check --diagnostic-level=error",
     "lint:biome:fix": "biome check --write --diagnostic-level=error"
   },
@@ -59,6 +67,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@playwright/test": "^1.54.2",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "@vercel/analytics": "^1.6.1",
@@ -68,12 +77,11 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-boundaries": "^5.4.0",
     "tailwindcss": "^4.1.18",
-    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "engines": {
     "node": ">=20.11.0",
-    "pnpm": "10.28.2"
+    "bun": ">=1.3.10"
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "bun@1.3.10"
 }

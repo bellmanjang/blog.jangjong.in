@@ -551,8 +551,8 @@ src/
 패키지 스크립트:
 
 ```bash
-pnpm --filter @bellmanjang/eslint-fsd-next-app build
-pnpm --filter @bellmanjang/eslint-fsd-next-app test
+bun run --filter @bellmanjang/eslint-fsd-next-app build
+bun run --filter @bellmanjang/eslint-fsd-next-app test
 ```
 
 이 패키지는 TypeScript config parser와 AST 유틸을 사용하므로 런타임 dependency로 `typescript`에 의존합니다.

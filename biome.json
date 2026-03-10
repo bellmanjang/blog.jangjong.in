@@ -31,7 +31,7 @@
             "!**/*.json",
             "!.vscode/*",
             "!**/*.md",
-            "!**/pnpm-lock.yaml",
+            "!**/bun.lock",
             "!**/next-env.d.ts"
         ]
     },

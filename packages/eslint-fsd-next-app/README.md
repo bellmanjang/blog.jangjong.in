@@ -551,8 +551,8 @@ The current tests cover:
 Package scripts:
 
 ```bash
-pnpm --filter @bellmanjang/eslint-fsd-next-app build
-pnpm --filter @bellmanjang/eslint-fsd-next-app test
+bun run --filter @bellmanjang/eslint-fsd-next-app build
+bun run --filter @bellmanjang/eslint-fsd-next-app test
 ```
 
 The package runtime depends on `typescript` because it uses the TypeScript config parser and AST utilities.

@@ -2,17 +2,20 @@ import fs from "node:fs";
 import path from "node:path";
 import type { NextRequest } from "next/server";
 import { readAllPosts } from "@/entities/post";
-import type { SearchDoc, SearchResponse } from "@/features/search";
+import type { SearchDoc } from "@/features/search";
 import {
     createSearchEngine,
     normalizeText,
     searchDocs,
     toSearchDoc,
 } from "@/features/search";
+import {
+    buildEmptySearchResponse,
+    buildSearchResponse,
+    parseSearchLimit,
+} from "./lib/response";
 
 const SEARCH_INDEX_FILE = path.join(process.cwd(), "_posts", "_index.json");
-const DEFAULT_LIMIT = 10;
-const MAX_LIMIT = 20;
 
 type SearchIndexCache =
     | {
@@ -27,15 +30,6 @@ type SearchIndexCache =
       };
 
 let cachedIndex: SearchIndexCache | null = null;
-
-function parseLimit(rawLimit: string | null) {
-    if (rawLimit == null) return DEFAULT_LIMIT;
-
-    const limit = Number.parseInt(rawLimit, 10);
-    if (!Number.isFinite(limit) || limit < 1) return DEFAULT_LIMIT;
-
-    return Math.min(limit, MAX_LIMIT);
-}
 
 function readBuiltMiniSearch() {
     try {
@@ -109,23 +103,20 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
     const rawQuery = req.nextUrl.searchParams.get("q") ?? "";
     const query = normalizeText(rawQuery);
-    const limit = parseLimit(req.nextUrl.searchParams.get("limit"));
+    const limit = parseSearchLimit(req.nextUrl.searchParams.get("limit"));
 
     if (!query) {
-        return Response.json({
-            query,
-            total: 0,
-            limit,
-            results: [],
-        } satisfies SearchResponse);
+        return Response.json(buildEmptySearchResponse(query, limit));
     }
 
     const { total, results } = searchDocs(getMiniSearch(), query, limit);
 
-    return Response.json({
-        query,
-        total,
-        limit,
-        results,
-    } satisfies SearchResponse);
+    return Response.json(
+        buildSearchResponse({
+            query,
+            total,
+            limit,
+            results,
+        }),
+    );
 }
