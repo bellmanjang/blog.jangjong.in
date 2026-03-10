@@ -3,14 +3,19 @@
 @reference "tailwindcss";
 
 .expandable_box_gradient {
+    @apply pointer-events-none;
     height: var(--expandable-box-gradient-h);
 
     &:before {
         --gradient-color: var(--gray-1);
 
-        @apply pointer-events-none absolute inset-0 opacity-90;
+        @apply absolute inset-0 opacity-90;
 
         content: "";
         background: linear-gradient(180deg, #0000, var(--gradient-color) 70%);
+    }
+
+    &[data-expanded="true"]:before {
+        background: transparent;
     }
 }

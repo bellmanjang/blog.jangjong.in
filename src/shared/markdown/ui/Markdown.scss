@@ -132,38 +132,46 @@ ul {
 }
 
 .prose .md-pre-wrapper {
-    @apply relative h-full text-sm font-mono font-medium bg-[var(--fenced-code-bg)];
+    @apply grid h-full min-h-0 text-sm font-mono font-medium bg-[var(--fenced-code-bg)];
 
-    padding: 0 var(--expandable-box-gradient-h) var(--expandable-box-gradient-h) 0 !important;
+    grid-template-columns: auto minmax(0, 1fr);
+}
 
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr));
-        width: 1px;
-        background-color: var(--border-gray);
-        pointer-events: none;
+.prose .md-pre-line-numbers {
+    @apply select-none text-[var(--gray-10)] bg-[var(--fenced-code-bg)];
+
+    padding-left: var(--code-linenumber-pl);
+    padding-right: var(--code-linenumber-pr);
+    padding-bottom: var(--fenced-code-pb);
+    border-right: 1px solid var(--border-gray);
+    font-variant-numeric: tabular-nums;
+}
+
+.prose .md-pre-line-number {
+    @apply block text-right;
+
+    min-width: var(--ln-width);
+}
+
+.prose .md-pre-scroll-area {
+    position: static !important;
+    padding-bottom: var(--fenced-code-pb);
+
+    & .rt-ScrollAreaScrollbar {
+        left: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr)) !important;
     }
 }
 
 .prose .md-pre-wrapper pre {
-    @apply w-full h-full !overflow-visible;
+    @apply min-w-0 bg-transparent;
 
+    margin: 0;
     padding: 0 !important;
     outline-offset: -1px;
 }
 
 .prose .md-pre-wrapper pre > code {
-    @apply inline-block w-full h-full;
-}
-
-.prose .md-pre-wrapper pre > code span.linenumber {
-    min-width: calc(var(--code-linenumber-pl) + var(--ln-width) + var(--code-linenumber-pr)) !important;
-    padding-left: var(--code-linenumber-pl) !important;
-    padding-right: var(--code-linenumber-pr) !important;
-    margin-right: 0.5ch;
+    @apply inline-block min-w-full;
 }
 
 /* Mermaid */

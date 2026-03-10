@@ -1,6 +1,5 @@
 "use client";
 
-import { ScrollArea } from "@radix-ui/themes";
 import { HighlightedPre } from "../../fenced-code/HighlightedPre";
 import { TextCopyButton } from "../../fenced-code/TextCopyButton";
 
@@ -14,9 +13,7 @@ export const SandpackFencedCodeClient = ({
     return (
         <div className="md-sp-fenced-code">
             <TextCopyButton text={code} />
-            <ScrollArea scrollbars="both">
-                <HighlightedPre code={code} lang={lang} />
-            </ScrollArea>
+            <HighlightedPre code={code} lang={lang} />
         </div>
     );
 };
