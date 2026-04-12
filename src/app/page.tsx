@@ -1,4 +1,5 @@
 import { findAllPosts, pickHero } from "@/entities/post";
+import { HomeVisitorStats } from "@/features/analytics";
 import { HeroArticle, List } from "@/widgets/post";
 
 export default function Page() {
@@ -12,6 +13,7 @@ export default function Page() {
             <div className="my-8">
                 <List posts={rest} />
             </div>
+            <HomeVisitorStats />
         </>
     );
 }

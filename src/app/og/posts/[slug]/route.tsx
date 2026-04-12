@@ -3,10 +3,11 @@ import type { NextRequest } from "next/server";
 import { getPostBySlug } from "@/entities/post";
 import { formatDate } from "@/shared/lib";
 
-export async function GET(
-    _req: NextRequest,
-    ctx: RouteContext<"/og/posts/[slug]">,
-) {
+type Params = {
+    params: Promise<{ slug: string }>;
+};
+
+export async function GET(_req: NextRequest, ctx: Params) {
     const params = await ctx.params;
     const slug = decodeURIComponent(params.slug);
 

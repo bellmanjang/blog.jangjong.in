@@ -5,11 +5,8 @@ const nextConfig = (phase): NextConfig => {
     const isDev = phase === PHASE_DEVELOPMENT_SERVER;
 
     return {
-        env: {
-            BASE_URL: isDev
-                ? "http://localhost:3000"
-                : "https://blog.jangjong.in",
-        },
+        env: {},
+        serverExternalPackages: ["@neondatabase/serverless"],
     };
 };
 

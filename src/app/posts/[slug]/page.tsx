@@ -8,6 +8,7 @@ import {
     findAllPosts,
     getPostBySlug,
 } from "@/entities/post";
+import { PostViewCounter } from "@/features/analytics";
 import { formatDate, safeDecodeURIComponent } from "@/shared/lib";
 import { Article } from "@/widgets/post";
 
@@ -40,10 +41,14 @@ export default async function PostPage(props: Params) {
             >
                 {post.title}
             </Text>
-            <div className="mt-2 mb-8 px-1">
+            <div className="mt-2 mb-8 flex items-center gap-2 px-1">
                 <Text size="2" color="gray">
                     {formatDate(post.publishedAt)}
                 </Text>
+                <Text size="2" color="gray" aria-hidden="true">
+                    ·
+                </Text>
+                <PostViewCounter slug={post.slug} />
             </div>
             <Article post={post} />
         </section>
