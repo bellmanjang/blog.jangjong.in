@@ -2,7 +2,7 @@
 
 import { Text } from "@radix-ui/themes";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
     PostViewStatsResponse,
     TrackPostViewResponse,
@@ -19,8 +19,10 @@ function formatViewCount(value: number | null) {
 export function PostViewCounter({ slug }: { slug: string }) {
     const pathname = usePathname();
     const [totalViews, setTotalViews] = useState<number | null>(null);
+    const postRespondedRef = useRef(false);
 
     useEffect(() => {
+        postRespondedRef.current = false;
         const controller = new AbortController();
 
         async function loadInitialCount() {
@@ -38,7 +40,9 @@ export function PostViewCounter({ slug }: { slug: string }) {
                 const payload =
                     (await response.json()) as PostViewStatsResponse;
 
-                setTotalViews(payload.totalViews);
+                if (!postRespondedRef.current) {
+                    setTotalViews(payload.totalViews);
+                }
             } catch {}
         }
 
@@ -80,6 +84,7 @@ export function PostViewCounter({ slug }: { slug: string }) {
                     (await response.json()) as TrackPostViewResponse;
 
                 sessionStorage.setItem(sessionKey, "1");
+                postRespondedRef.current = true;
                 setTotalViews(payload.stats.totalViews);
             } catch {}
         }
