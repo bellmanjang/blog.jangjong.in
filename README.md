@@ -81,20 +81,6 @@ Markdown 렌더링 라이브러리는 <a href="https://github.com/remarkjs/react
 블록 컴포넌트를 커스터마이징할 수 있고 플러그인이 다양한 점이 마음에 들었습니다.  
 아무래도 수식, 도식을 활용할 일이 많을 것 같아서 KaTeX, Mermaid 플러그인을 적용헸어요.
 
-## 방문자수 추적 켜기
-
-포스트 상세 조회수 집계는 `Neon` 을 기준으로 구현되어 있습니다.
-
-1. `.env.example` 를 참고해서 `DATABASE_URL`, `ANALYTICS_SALT` 를 설정합니다.
-2. Neon SQL editor에서 `scripts/setup-neon-analytics.sql` 을 실행합니다.
-3. 로컬에서 write 테스트가 필요하면 `ANALYTICS_WRITE_IN_DEV=1` 을 추가합니다.
-
-기본 동작은 다음과 같습니다.
-
-- 프로덕션에서만 조회 이벤트를 저장합니다.
-- Preview 배포와 로컬 개발 환경은 기본적으로 저장하지 않습니다.
-- 포스트 상세 페이지에서만 커스텀 조회수를 집계합니다.
-
 # 공통 렌더링 블록 컴포넌트로 분리
 
 아래는 블록 컴포넌트 중 Headings과 Link의 코드입니다.  
@@ -458,6 +444,106 @@ UI 쪽에서는 input 값이 바뀔 때마다 바로 요청을 보내지 않고 
 검색창에 focus가 들어오면 화면 전체에 overlay를 깔아서 오동작 클릭을 막았습니다.  
 `Escape`시 blur 대신 overlay만 닫도록 처리했는데, 이 방식이 한글 입력기와 섞였을 때도 안정적으로 동작했습니다.
 
+# 방문자 수
+
+## Neon DB + 서버 API
+
+DB는 <a href="https://neon.tech" target="_blank">Neon</a>(서버리스 PostgreSQL)을 선택했습니다.  
+서버리스 환경에서 커넥션 풀 관리를 신경 쓰지 않아도 되고, `@neondatabase/serverless` 드라이버가 HTTP 기반으로 동작해서 Edge/Node 어디서든 쓸 수 있다는 점이 좋았어요.
+
+테이블 구조는 단순하게 세 개로 잡았습니다.
+
+- `blog_visitors` — 전체 방문자 누적 (visitor_hash PK)
+- `blog_daily_visitors` — 날짜별 방문자 (date_kr + visitor_hash 복합 PK)
+- `post_total_views` — 포스트별 조회수 (slug PK)
+
+조회수 증가는 `INSERT ... ON CONFLICT DO UPDATE`로 원자적으로 처리했습니다.
+
+```sql
+INSERT INTO post_total_views (slug, total_views, last_viewed_at)
+VALUES (${slug}, 1, NOW())
+ON CONFLICT (slug)
+DO UPDATE SET
+    total_views = post_total_views.total_views + 1,
+    last_viewed_at = NOW()
+RETURNING total_views::int AS total_views
+```
+
+### 설정 방법
+
+1. `.env.example`를 참고해서 `DATABASE_URL`, `ANALYTICS_SALT`, `BASE_URL`을 설정합니다.
+2. Neon SQL editor에서 `scripts/setup-neon-analytics.sql`을 실행합니다.
+3. 로컬에서 write 테스트가 필요하면 `ANALYTICS_WRITE_IN_DEV=1`을 추가합니다.
+
+기본 동작은 다음과 같습니다.
+
+- 프로덕션에서만 조회 이벤트를 저장합니다.
+- Preview 배포와 로컬 개발 환경은 기본적으로 저장하지 않습니다.
+
+## 익명 처리
+
+쿠키에 발급한 `visitor_id`(UUID)를 그대로 저장하지 않고, 서버에서 `ANALYTICS_SALT`와 함께 SHA-256 해시로 변환해 저장합니다.  
+DB에 원본 UUID가 남지 않으니, 쿠키가 유출돼도 역추적이 어렵습니다.
+
+```ts
+async function hashAnalyticsValue(value: string) {
+    const salt = process.env.ANALYTICS_SALT;
+    const bytes = new TextEncoder().encode(`${salt}:${value}`);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+
+    return [...new Uint8Array(digest)]
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+}
+```
+
+## write 스킵 조건
+
+아무 요청이나 카운팅하면 수치가 오염되기 때문에 아래 경우에는 write를 건너뜁니다.
+
+- `DNT: 1` 헤더 — 추적 거부 의사 존중
+- `next-router-prefetch`, `sec-purpose: prefetch` 등 — Next.js 프리페치 요청
+- 봇 User-Agent 패턴 매칭 — Googlebot, Lighthouse, curl 등
+- Vercel preview 환경 — 배포 미리보기에서 발생하는 방문은 제외
+
+## 클라이언트 — 1초 dwell timer
+
+`BlogVisitTracker`는 레이아웃에 전역으로 마운트된 null 렌더 컴포넌트입니다.  
+탭이 보이는 상태에서 1초 이상 머문 경우에만 POST를 보냅니다.
+
+```ts
+timeoutId = window.setTimeout(() => {
+    void track();
+}, ANALYTICS_DWELL_TIME_MS); // 1000ms
+```
+
+같은 경로를 같은 세션에서 여러 번 방문해도 한 번만 카운팅되도록 `sessionStorage`로 중복을 막았습니다.  
+서버에서는 `ON CONFLICT DO NOTHING`으로 한 번 더 방어합니다.
+
+`BlogVisitTracker`가 POST 응답을 받으면 `CustomEvent`로 통계를 브로드캐스트하고,  
+`HomeVisitorStats`가 이 이벤트를 구독해서 실시간으로 카운트를 갱신합니다.
+
+## PostViewCounter의 race condition
+
+`PostViewCounter`는 마운트 시점에 GET으로 현재 조회수를 먼저 가져오고,  
+1초 뒤에 POST로 조회수를 증가시킵니다.
+
+문제는 GET이 POST보다 늦게 응답하면, 증가 전 카운트로 state가 덮어써지는 경우가 생긴다는 거예요.
+
+`postRespondedRef` 플래그 하나로 간단히 해결했습니다.  
+POST가 먼저 응답했다면 GET 결과는 무시하는 방식입니다.
+
+```ts
+// GET effect
+if (!postRespondedRef.current) {
+    setTotalViews(payload.totalViews);
+}
+
+// POST track()
+postRespondedRef.current = true;
+setTotalViews(payload.stats.totalViews);
+```
+
 # TO-DO
 
 - [x] 공통 렌더링 블록 컴포넌트로 분리
@@ -479,7 +565,7 @@ UI 쪽에서는 input 값이 바뀔 때마다 바로 요청을 보내지 않고 
 - [x] CodeSandbox 블록
 - [x] TOC(Table of Contents) 사이드바
 - [x] 검색
-- [ ] 방문자 수
+- [x] 방문자 수
 - [ ] 댓글
 - [ ] 그래프 뷰
 - [ ] 에디터
