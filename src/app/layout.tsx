@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
+import { BlogVisitTracker } from "@/features/analytics";
 import { cx } from "@/shared/lib";
 import { Navbar } from "@/shared/ui";
 
@@ -117,6 +118,7 @@ export default function RootLayout({
                 />
             </head>
             <body>
+                <BlogVisitTracker />
                 <ThemeProvider attribute="class">
                     <Theme accentColor={"grass"} radius={"none"} asChild>
                         <ScrollArea

@@ -1,6 +1,7 @@
 export {
     findAllPosts,
     getPostBySlug,
+    hasPostSlug,
     pickHero,
     readAllPosts,
 } from "./api/post";

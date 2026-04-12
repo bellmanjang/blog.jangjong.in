@@ -81,6 +81,20 @@ Markdown 렌더링 라이브러리는 <a href="https://github.com/remarkjs/react
 블록 컴포넌트를 커스터마이징할 수 있고 플러그인이 다양한 점이 마음에 들었습니다.  
 아무래도 수식, 도식을 활용할 일이 많을 것 같아서 KaTeX, Mermaid 플러그인을 적용헸어요.
 
+## 방문자수 추적 켜기
+
+포스트 상세 조회수 집계는 `Neon` 을 기준으로 구현되어 있습니다.
+
+1. `.env.example` 를 참고해서 `DATABASE_URL`, `ANALYTICS_SALT` 를 설정합니다.
+2. Neon SQL editor에서 `scripts/setup-neon-analytics.sql` 을 실행합니다.
+3. 로컬에서 write 테스트가 필요하면 `ANALYTICS_WRITE_IN_DEV=1` 을 추가합니다.
+
+기본 동작은 다음과 같습니다.
+
+- 프로덕션에서만 조회 이벤트를 저장합니다.
+- Preview 배포와 로컬 개발 환경은 기본적으로 저장하지 않습니다.
+- 포스트 상세 페이지에서만 커스텀 조회수를 집계합니다.
+
 # 공통 렌더링 블록 컴포넌트로 분리
 
 아래는 블록 컴포넌트 중 Headings과 Link의 코드입니다.  

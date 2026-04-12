@@ -41,6 +41,10 @@ export const getPostBySlug = cache(readPostBySlug);
 
 export const findAllPosts = cache(readAllPosts);
 
+export function hasPostSlug(slug: string) {
+    return findAllPosts().some(post => post.slug === slug);
+}
+
 export function pickHero(posts: Post[]) {
     if (posts.length === 0) return { hero: null, rest: [] };
     const idx = posts.findLastIndex(post => post.highlighted);
