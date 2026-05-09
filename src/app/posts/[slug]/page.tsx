@@ -9,6 +9,7 @@ import {
     getPostBySlug,
 } from "@/entities/post";
 import { PostViewCounter } from "@/features/analytics";
+import { PostComments } from "@/features/comments";
 import { formatDate, safeDecodeURIComponent } from "@/shared/lib";
 import { Article } from "@/widgets/post";
 
@@ -51,6 +52,7 @@ export default async function PostPage(props: Params) {
                 <PostViewCounter slug={post.slug} />
             </div>
             <Article post={post} />
+            <PostComments slug={post.slug} />
         </section>
     );
 }

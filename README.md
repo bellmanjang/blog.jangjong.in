@@ -1,571 +1,155 @@
 # Jang Jong-in's Blog
 
-> 처음 개발 시작했을 때 Jekyll(Ruby)로 블로그를 만들어서 GitHub Pages로 호스팅했었는데, 만들기만 하고 한참 방치해뒀던 기억이 납니다.  
-> Next.js로 다시 만들어 보려고 해요. 3년 만에 새로 만드는 블로그 제작기... 이번엔 꾸준히 운영할 수 있을까요?
+Next.js App Router 기반 개인 블로그입니다.
 
-# 블로그 템플릿 살펴보기
+포스트는 `_posts/*.md`로 관리하고, 블로그 기능 구현 과정은 글로 남깁니다.  
+긴 제작기는 [_posts/집-짓는-중입니다.md](_posts/집-짓는-중입니다.md)에 정리되어 있습니다.
 
-아래 `Next.js` 템플릿들을 참고했습니다.
+## Tech Stack
 
-- <a href="https://vercel.com/templates/portfolio/portfolio-starter-kit" target="_blank">Portfolio Starter Kit</a>
-- <a href="https://vercel.com/templates/blog/blog-starter-kit" target="_blank">Blog Starter Kit</a>
+- Runtime / package manager: `Bun`
+- Framework: `Next.js App Router`
+- UI: `Radix UI`, `Tailwind CSS`
+- Markdown: `react-markdown`, `unified`, `remark/rehype` plugins
+- Search: `MiniSearch` + build-time index
+- Storage: `Neon PostgreSQL`
+- Deploy: `Vercel`
 
-블로그 템블릿에 적용된 기능 중, 이전에는 신경쓰지 못했던 부분들이 많더라구요.
+## Features
 
-## OpenGraph 이미지
+- Markdown 기반 포스트
+- 동적 Open Graph 이미지
+- JSON-LD 메타데이터
+- 커스텀 Markdown 렌더러
+- KaTeX, Mermaid, Sandpack live code block
+- TOC 사이드바와 활성 경로 표시
+- 한글/영문 검색
+- 블로그 방문자 수와 포스트 조회수
+- 포스트 댓글과 1단계 답글
 
-OG 이미지는 소셜 미디어나 메신저에서 웹사이트 링크를 공유할 때, 미리보기에 활용되는 이미지입니다.  
-아래는 OG 이미지를 동적으로 생성하는 라우트 핸들러입니다.
+## Project Structure
 
-```tsx
-import { ImageResponse } from "next/og";
-import type { NextRequest } from "next/server";
-
-export async function GET(
-    _req: NextRequest,
-    ctx: RouteContext<"/og/posts/[slug]">,
-) {
-    const { slug } = await ctx.params;
-
-    return new ImageResponse(
-        <div tw="flex h-full w-full p-5 flex-col justify-between bg-[#F7F9F8] text-[#1A211E]">
-            ...
-        </div>,
-        {
-            width: 1200,
-            height: 630,
-        },
-    );
-}
+```text
+src/
+  app/        Next.js routes, layouts, route handlers
+  widgets/    page-level UI blocks
+  features/   user-facing feature modules
+  entities/   domain entities such as post
+  shared/     shared UI, markdown, browser, lib code
+_posts/       markdown posts and build-time search index
+scripts/      build/setup scripts
+packages/     local workspace packages
+tests/e2e/    Playwright smoke tests
 ```
 
-<img src="/public/images/집-짓는-중입니다-img-01.png" width="50%" title="이런 식으로 포스팅마다 동적으로 생성됩니다." />
+이 프로젝트는 FSD에 가까운 경계 규칙을 사용합니다.  
+import 규칙은 `eslint-plugin-boundaries`와 로컬 패키지 `@bellmanjang/eslint-fsd-next-app`으로 검사합니다.
 
-## JSON-LD
+## Getting Started
 
-웹페이지의 데이터를 JSON 기반으로 구조화하여, 검색 엔진이 웹페이지의 콘텐츠를 더 잘 이해하도록 돕는 마크업 언어라고 합니다.
-JSON 기반이라 읽기 쉽고, 기존 메타 태그 방식보다 유지 보수가 쉬운 장점이 있습니다.
-
-아래처럼 script 태그를 만들어서 넣으면 됩니다. 위치는 꼭 head 태그 안이 아니어도 상관없다고 하네요.
-
-```tsx
-<script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.title,
-            datePublished: parseISO(post.publishedAt).toISOString(),
-            dateModified: parseISO(post.lastModifiedAt).toISOString(),
-            description: post.summary,
-            image: `${process.env.BASE_URL}/og/posts/${encodedSlug}`,
-            url: `${process.env.BASE_URL}/posts/${encodedSlug}`,
-            author: {
-                "@type": "Person",
-                name: "Jang Jong-in",
-                alternateName: "장종인",
-                url: "https://jangjong.in",
-            },
-        })
-    }}
-/>
+```bash
+bun install
+bun run dev
 ```
 
-# Markdown 기반 블로그
+개발 서버는 기본적으로 `http://localhost:3000`에서 실행됩니다.
 
-블로그 글은 .md 파일로 관리하기로 했습니다. 렌더링/에디터 라이브러리 종속성을 최소화하는 방향으로 가고 싶었어요.  
-또한 글을 데이터로 관리하면 글만 따로 모아 별도의 리포지토리에서 관리할 수 있고, 마이그레이션/재사용에 용이하기 때문입니다.
+프로덕션 빌드:
 
-Markdown 렌더링 라이브러리는 <a href="https://github.com/remarkjs/react-markdown" target="_blank">react-markdown</a>을 선택했습니다.  
-블록 컴포넌트를 커스터마이징할 수 있고 플러그인이 다양한 점이 마음에 들었습니다.  
-아무래도 수식, 도식을 활용할 일이 많을 것 같아서 KaTeX, Mermaid 플러그인을 적용헸어요.
-
-# 공통 렌더링 블록 컴포넌트로 분리
-
-아래는 블록 컴포넌트 중 Headings과 Link의 코드입니다.  
-Headings에는 anchor(#)를 추가했는데, 이 때 사용되는 id를 주입하기 위해 플러그인을 작성했습니다.  
-Link는 App route, Headings anchor를 먼저 처리하고 그 외의 경우 새 탭에서 열리도록 설정했습니다.
-
-```tsx
-// @/app/ui/markdown/renderers/Headings.tsx
-export function createHeadingRenderer(
-    level: 1 | 2 | 3 | 4 | 5 | 6,
-): Components[typeof tagName] {
-    const tagName = `h${level}` as const;
-
-    return props => {
-        const { node, color, children, ...rest } = props;
-
-        return (
-            <Heading as={tagName} {...rest}>
-                <span className="relative">
-                    <Link className="md-anchor" href={`#${props.id}`} />
-                    {children}
-                </span>
-            </Heading>
-        );
-    };
-};
-
-// @/app/ui/markdown/renderers/Link.tsx
-export const linkRenderer: Components["a"] = props => {
-    const { node, color, children, href, ...rest } = props;
-
-    if (!href) return <Text {...rest}>{children}</Text>;
-
-    // App route
-    if (href.startsWith("/")) {
-        return (
-            <RadixLink asChild>
-                <Link href={href} {...rest}>
-                    {props.target === "_blank" && (
-                        <ArrowUpRight
-                            className="open-in-new-tab"
-                            strokeLinecap="butt"
-                        />
-                    )}
-                    {children}
-                </Link>
-            </RadixLink>
-        );
-    }
-
-    // Headings anchor
-    if (href.startsWith("#")) {
-        return <RadixLink {...rest}>{children}</RadixLink>;
-    }
-
-    // fallback
-    return (
-        <RadixLink
-            href={href}
-            {...rest}
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <ArrowUpRight
-                className="open-in-new-tab"
-                strokeLinecap="butt"
-            />
-            {children}
-        </RadixLink>
-    );
-};
+```bash
+bun run build
+bun run start
 ```
 
-AST 트리를 탐색하면서 h1~h6 태그에 중복 방지 처리된 id를 주입하는 플러그인 코드입니다.
+## Environment Variables
 
-```ts
-import type { Element, Root } from "hast";
-import type { Plugin } from "unified";
+`.env.example`을 참고해서 `.env.local`을 만듭니다.
 
-function slugify(str: any) {
-    return str
-        .toString()
-        .toLowerCase()
-        .trim() // Remove whitespace from both ends of a string
-        .replace(/\s+/g, "-") // Replace spaces with -
-        .replace(/&/g, "-and-") // Replace & with 'and'
-        .replace(/[^\w[가-힣]-]+/g, "") // Remove all non-word characters except for -
-        .replace(/--+/g, "-"); // Replace multiple - with single -
-}
-
-function getTextContent(node: any): string {
-    if (!node) return "";
-    if (node.type === "text") return node.value ?? "";
-    if (Array.isArray(node.children)) {
-        return node.children.map(getTextContent).join("");
-    }
-    return "";
-}
-
-const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
-
-export const headingId: Plugin<[], Root> = () => {
-    const used = new Set<string>();
-
-    return tree => {
-        // DFS
-        const walk = (node: any) => {
-            if (!node) return;
-
-            if (node.type === "element") {
-                const el = node as Element;
-
-                if (HEADING_TAGS.has(el.tagName)) {
-                    const rawText = getTextContent(el);
-                    const base = slugify(rawText) || "section";
-
-                    let id = base;
-                    let i = 2;
-
-                    while (used.has(id)) {
-                        id = `${base}-${i++}`;
-                    }
-                    
-                    used.add(id);
-
-                    el.properties ??= {};
-                    (el.properties as any).id = id;
-                }
-            }
-
-            if (Array.isArray(node.children)) {
-                for (const child of node.children) walk(child);
-            }
-        };
-
-        walk(tree);
-    };
-};
+```env
+BASE_URL="https://blog.jangjong.in"
+DATABASE_URL="postgres://USER:PASSWORD@EP-XXXX.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+ANALYTICS_SALT="replace-with-a-long-random-secret"
+# ANALYTICS_WRITE_IN_DEV="1"
 ```
 
-Unordered list의 마커가 depth에 따라 ● -> ○ -> ■ -> □ 순으로 순환하도록 하기 위해 depth를 주입하는 플러그인 코드입니다.
+- `BASE_URL`: canonical URL과 OG 이미지 URL 생성에 사용합니다.
+- `DATABASE_URL`: Neon PostgreSQL 연결 문자열입니다.
+- `ANALYTICS_SALT`: 방문자/댓글 작성자 식별값을 해시할 때 사용합니다.
+- `ANALYTICS_WRITE_IN_DEV`: 로컬 개발 환경에서 방문자/조회수 write를 허용하려면 `1`로 설정합니다.
 
-```ts
-import type { Element, Root } from "hast";
-import type { Plugin } from "unified";
+댓글 UI는 개발 모드에서 mock 데이터를 사용합니다.  
+실제 댓글 저장/조회는 production/test 빌드의 API 경로에서 Neon을 사용합니다.
 
-type Options = {
-    modulo?: number; // depth % modulo
-    attribute?: string; // data-*
-    includeOrdered?: boolean;
-    includeUnordered?: boolean;
-};
+## Storage Setup
 
-export const listDepth: Plugin<[Options?], Root> = opts => {
-    const {
-        modulo = 4,
-        attribute = "data-depth",
-        includeOrdered = true,
-        includeUnordered = true,
-    } = opts ?? {};
+방문자 수, 조회수, 댓글은 Neon PostgreSQL에 저장합니다.
 
-    return tree => {
-        // DFS
-        const walk = (node: any, listDepth: number) => {
-            if (!node) return;
+Neon SQL editor에서 아래 스크립트를 실행합니다.
 
-            const isElement = node.type === "element";
-            const tag = isElement ? (node as Element).tagName : null;
-
-            const isUl = tag === "ul";
-            const isOl = tag === "ol";
-            const isList =
-                (includeUnordered && isUl) || (includeOrdered && isOl);
-
-            let nextDepth = listDepth;
-
-            if (isList) {
-                const depthMod = ((listDepth % modulo) + modulo) % modulo;
-
-                const el = node as Element;
-                el.properties ??= {};
-                (el.properties as any)[attribute] = String(depthMod);
-
-                nextDepth = listDepth + 1;
-            }
-
-            if (Array.isArray(node.children)) {
-                for (const child of node.children) walk(child, nextDepth);
-            }
-        };
-
-        walk(tree, 0);
-    };
-};
+```bash
+scripts/setup-neon-analytics.sql
 ```
 
-아래는 현재 적용된 플러그인과 컴포넌트들입니다.
+생성되는 주요 테이블:
 
-```ts
-export const markdownOptions: Pick<
-    Options,
-    "remarkPlugins" | "rehypePlugins" | "components"
-> = {
-    remarkPlugins: [remarkGfm, remarkMath],
-    rehypePlugins: [rehypeRaw, rehypeKatex, headingId, listDepth],
-    components: {
-        h1: createHeadingRenderer(1),
-        h2: createHeadingRenderer(2),
-        h3: createHeadingRenderer(3),
-        h4: createHeadingRenderer(4),
-        h5: createHeadingRenderer(5),
-        h6: createHeadingRenderer(6),
-        a: linkRenderer,
-        p: paragraphRenderer,
-        blockquote: blockquoteRenderer,
-        code: codeRenderer,
-        img: imgRenderer,
-        input: inputRenderer, // Task list items checkbox
-        table: tableRenderer.table,
-        thead: tableRenderer.thead,
-        tbody: tableRenderer.tbody,
-        tr: tableRenderer.tr,
-        th: tableRenderer.th,
-        td: tableRenderer.td,
-    },
-};
+- `blog_visitors`
+- `blog_daily_visitors`
+- `post_total_views`
+- `post_comments`
+
+## Scripts
+
+- `bun run dev`: Next.js 개발 서버 실행
+- `bun run build`: 프로덕션 빌드와 검색 인덱스 생성
+- `bun run start`: 빌드 결과 실행
+- `bun run test`: `src` 아래 unit test 실행
+- `bun run lint`: ESLint와 Biome 검사
+- `bun run validate`: 로컬 ESLint 패키지 test/build와 앱 lint 실행
+- `bun run test:e2e`: 빌드 후 Playwright smoke test 실행
+- `bun run test:all`: 전체 검증 게이트
+
+## Writing Posts
+
+포스트는 `_posts/*.md`에 작성합니다.
+
+Frontmatter 예시:
+
+```yaml
+---
+title: "집 짓는 중..."
+summary: "포스트 요약"
+publishedAt: "2026-02-09T21:00:00+09:00"
+lastModifiedAt: "2026-05-09T22:54:51+09:00"
+highlighted: true
+---
 ```
 
-# Live code 블록
+빌드 시 `scripts/build-search-index.ts`가 `_posts/_index.json`을 생성합니다.
 
-글을 쓰다 보면 코드 스니펫만으로는 맥락이 잘 전달되지 않는 경우가 있습니다.  
-특히 UI 컴포넌트나 상태 변화, 인터랙션처럼 실행 결과가 중요한 경우에는 실제 동작을 보는 쪽이 훨씬 이해가 빠르다고 느꼈어요.
+## Testing
 
-그래서 <a href="https://sandpack.codesandbox.io/" target="_blank">Sandpack</a>을 활용해 Live code 블록을 추가했습니다.  
-지금은 읽기 전용이지만, 추후에는 필요에 따라 직접 코드를 수정해보며 결과를 확인할 수 있도록 확장할 계획입니다.
+일반적인 작업 검증:
 
-# Table of Contents (TOC)
-
-글 내용을 한눈에 파악하고 원하는 섹션으로 빠르게 이동할 수 있도록 TOC 사이드바를 추가했습니다.  
-단순한 앵커 목록이 아니라, **현재 읽고 있는 흐름을 시각적으로 보여주는 것**에 초점을 맞췄어요.
-
-## Anchor 스크롤 처리
-
-앵커에 따른 스크롤 이동은 브라우저 기본 동작에 맡기지 않고, 직접 제어하도록 구성했습니다.
-
-### 기본 동작 제어 방식
-
-Headings / TOC 클릭 시 기본 동작을 `preventDefault`로 막고, `history.pushState`로 hash만 갱신했습니다.  
-실제 스크롤 이동은 useHashScroll 커스텀 훅에서만 수행하도록 해서 스크롤 로직의 책임을 한 곳으로 모았습니다.
-
-### 이렇게 분리한 이유
-
-- 스크롤 동작의 단일 진입점 확보
-- radix-ui ScrollArea에서도 일관된 동작 보장
-- 오프셋 보정, 애니메이션 커스터마이징 용이
-
-## TOC 트리 구성
-
-TOC 데이터는 마크다운 AST 단계에서 추출하는 방향으로 설계했습니다.
-
-`headingId` 플러그인에서 h1~h6 태그에 중복 방지된 id를 주입하고,  
-`collectToc` 플러그인에서 heading의 depth / text / id 기반으로 트리 구조를 생성합니다.
-
-처음에 flat 구조도 고려했지만, '경로(path) 시각화'를 안정적으로 처리하려면 트리 구조가 더 적합하다고 판단했어요.
-
-## 활성 항목 추적
-
-현재 뷰포트에 보이는 heading 추적은 `IntersectionObserver`를 사용했습니다.
-
-### Observer 관리 전략
-
-구현하면서 특히 다음 부분을 신경 썼습니다.
-
-- Observer 싱글톤 관리
-- 상태 변경이 있는 경우에만 store 업데이트 (불필요한 rerender 방지)
-
-### rAF 기반 배치 처리
-
-스크롤 중 과도한 업데이트를 막기 위해, 다수의 entry를 rAF로 배치 처리했습니다.
-
-> `pendingEntries` 큐에 모았다가  
-> `requestAnimationFrame` 타이밍에 한 번에 처리
-
-이 방식으로 스크롤 중 발생하는 잦은 observer 콜백 비용을 줄였습니다.
-
-## 활성 경로 시각화
-
-단순히 현재 활성 항목만 강조하는 대신, **활성 항목까지의 전체 경로(path)**가 보이도록 구현했습니다.
-
-이를 위해 TOC 트리 데이터를 전처리해서 `nodeInPath`, `nextSiblingsInPath` 메타 정보를 생성했고,  
-렌더링 시에는 이 메타 정보만으로 '어떤 라인이 강조되어야 하는지'를 빠르게 판별하도록 했습니다.
-
-또한 상태를 단순 boolean 대신 `"active" | "hover" | false`로 구분해서  
-**현재 읽는 흐름 강조**와 **hover 피드백**을 일관된 방식으로 시각화했습니다.
-
-# 검색
-
-글 수는 아직 많지 않지만, 검색은 초반에 기준을 잡아두는 편이 낫겠다고 생각했습니다.
-
-목표는 형태소 분석기처럼 복잡한 검색이 아니라,  
-**가볍고 예측 가능한 규칙으로 한글/영문이 섞인 글도 잘 찾을 수 있게 만드는 것**이었어요.
-
-## 빌드 타임 인덱스 생성
-
-기본적으로는 빌드 타임에 검색용 인덱스를 생성해서 사용하도록 구성했습니다.  
-본문 마크다운은 그대로 넣지 않고, 검색에 필요 없는 요소를 먼저 걷어낸 뒤 토큰 문자열로 변환합니다.
-
-- fenced code block은 인덱스에서 제외
-- inline code는 포함
-- 링크는 URL 자체는 버리고 사용자에게 보이는 텍스트만 포함
-- 이미지는 URL 대신 alt, title 속성을 인덱싱
-
-요약하면 이런 형태입니다.
-
-```ts
-export function toSearchDoc(post: Post): SearchDoc {
-    const bodyText = stripMarkdown(post.content);
-
-    return {
-        slug: post.slug,
-        title: normalizeText(post.title),
-        summary: normalizeText(post.summary),
-        // 실제 구현에서는 tags, 날짜 필드, 다른 token 필드도 함께 넣습니다.
-        bodyTokens: koBigramTokens(bodyText),
-    };
-}
+```bash
+bun run test
+bun run lint
+bun run build
 ```
 
-이렇게 전처리한 결과를 `_posts/_index.json`으로 만들어 두고,  
-검색 API에서는 이 파일을 우선 사용해 `MiniSearch` 인스턴스를 구성합니다.  
-빌드된 인덱스가 없을 때만 포스트를 다시 읽어 fallback 인덱스를 만듭니다.
+사용자 흐름에 영향을 주는 변경은 E2E까지 확인합니다.
 
-## 한글 bi-gram 토큰화
-
-한글 검색은 형태소 분석기까지 도입하지 않고, bi-gram 방식으로 처리했습니다.  
-예를 들어 `검색처리`는 `검색 색처 처리`처럼 겹치게 토큰을 만들고,  
-query도 문서와 같은 전처리와 토큰화 규칙을 거쳐, 인덱스와 동일한 토큰 경계를 사용하도록 맞췄습니다.
-
-`FSD를`, `Next.js로`, `Headings과`처럼 영문 키워드와 한글 조사/단어가 붙어 있어도,  
-영문 키워드와 한글 부분이 각각 따로 토큰화되도록 한글 연속 구간과 영문/숫자 연속 구간을 분리해 추출했습니다.
-
-```ts
-for (const run of t.match(SEARCH_RUN_RE) ?? []) {
-    if (HANGUL_RUN_RE.test(run)) {
-        tokens.push(...ngrams(run, 2));
-        continue;
-    }
-
-    tokens.push(run);
-}
+```bash
+bun run test:e2e
 ```
 
-## MiniSearch와 검색 UX
+CI에서는 `bun run test:all`을 실행합니다.
 
-인덱싱/검색 라이브러리는 `MiniSearch`를 사용했습니다.  
-query도 같은 전처리 규칙을 거친 뒤 검색해서, 입력값과 인덱스가 같은 토큰 규칙을 사용하도록 구성했습니다.
+## Deployment
 
-UI 쪽에서는 input 값이 바뀔 때마다 바로 요청을 보내지 않고 `debounce + AbortController`를 사용했습니다.  
-입력이 잠시 멈춘 시점의 query만 `/api/search`로 보내고, 이미 진행 중이던 이전 요청은 취소하는 방식입니다.
+배포는 Vercel Git integration이 담당합니다.
 
-검색창에 focus가 들어오면 화면 전체에 overlay를 깔아서 오동작 클릭을 막았습니다.  
-`Escape`시 blur 대신 overlay만 닫도록 처리했는데, 이 방식이 한글 입력기와 섞였을 때도 안정적으로 동작했습니다.
+- PR: GitHub Actions CI와 Vercel Preview Deployment 실행
+- `main` 머지: Vercel Production Deployment 실행
+- Vercel build command: `bun run build`
 
-# 방문자 수
-
-## Neon DB + 서버 API
-
-DB는 <a href="https://neon.tech" target="_blank">Neon</a>(서버리스 PostgreSQL)을 선택했습니다.  
-서버리스 환경에서 커넥션 풀 관리를 신경 쓰지 않아도 되고, `@neondatabase/serverless` 드라이버가 HTTP 기반으로 동작해서 Edge/Node 어디서든 쓸 수 있다는 점이 좋았어요.
-
-테이블 구조는 단순하게 세 개로 잡았습니다.
-
-- `blog_visitors` — 전체 방문자 누적 (visitor_hash PK)
-- `blog_daily_visitors` — 날짜별 방문자 (date_kr + visitor_hash 복합 PK)
-- `post_total_views` — 포스트별 조회수 (slug PK)
-
-조회수 증가는 `INSERT ... ON CONFLICT DO UPDATE`로 원자적으로 처리했습니다.
-
-```sql
-INSERT INTO post_total_views (slug, total_views, last_viewed_at)
-VALUES (${slug}, 1, NOW())
-ON CONFLICT (slug)
-DO UPDATE SET
-    total_views = post_total_views.total_views + 1,
-    last_viewed_at = NOW()
-RETURNING total_views::int AS total_views
-```
-
-### 설정 방법
-
-1. `.env.example`를 참고해서 `DATABASE_URL`, `ANALYTICS_SALT`, `BASE_URL`을 설정합니다.
-2. Neon SQL editor에서 `scripts/setup-neon-analytics.sql`을 실행합니다.
-3. 로컬에서 write 테스트가 필요하면 `ANALYTICS_WRITE_IN_DEV=1`을 추가합니다.
-
-기본 동작은 다음과 같습니다.
-
-- 프로덕션에서만 조회 이벤트를 저장합니다.
-- Preview 배포와 로컬 개발 환경은 기본적으로 저장하지 않습니다.
-
-## 익명 처리
-
-쿠키에 발급한 `visitor_id`(UUID)를 그대로 저장하지 않고, 서버에서 `ANALYTICS_SALT`와 함께 SHA-256 해시로 변환해 저장합니다.  
-DB에 원본 UUID가 남지 않으니, 쿠키가 유출돼도 역추적이 어렵습니다.
-
-```ts
-async function hashAnalyticsValue(value: string) {
-    const salt = process.env.ANALYTICS_SALT;
-    const bytes = new TextEncoder().encode(`${salt}:${value}`);
-    const digest = await crypto.subtle.digest("SHA-256", bytes);
-
-    return [...new Uint8Array(digest)]
-        .map(byte => byte.toString(16).padStart(2, "0"))
-        .join("");
-}
-```
-
-## write 스킵 조건
-
-아무 요청이나 카운팅하면 수치가 오염되기 때문에 아래 경우에는 write를 건너뜁니다.
-
-- `DNT: 1` 헤더 — 추적 거부 의사 존중
-- `next-router-prefetch`, `sec-purpose: prefetch` 등 — Next.js 프리페치 요청
-- 봇 User-Agent 패턴 매칭 — Googlebot, Lighthouse, curl 등
-- Vercel preview 환경 — 배포 미리보기에서 발생하는 방문은 제외
-
-## 클라이언트 — 1초 dwell timer
-
-`BlogVisitTracker`는 레이아웃에 전역으로 마운트된 null 렌더 컴포넌트입니다.  
-탭이 보이는 상태에서 1초 이상 머문 경우에만 POST를 보냅니다.
-
-```ts
-timeoutId = window.setTimeout(() => {
-    void track();
-}, ANALYTICS_DWELL_TIME_MS); // 1000ms
-```
-
-같은 경로를 같은 세션에서 여러 번 방문해도 한 번만 카운팅되도록 `sessionStorage`로 중복을 막았습니다.  
-서버에서는 `ON CONFLICT DO NOTHING`으로 한 번 더 방어합니다.
-
-`BlogVisitTracker`가 POST 응답을 받으면 `CustomEvent`로 통계를 브로드캐스트하고,  
-`HomeVisitorStats`가 이 이벤트를 구독해서 실시간으로 카운트를 갱신합니다.
-
-## PostViewCounter의 race condition
-
-`PostViewCounter`는 마운트 시점에 GET으로 현재 조회수를 먼저 가져오고,  
-1초 뒤에 POST로 조회수를 증가시킵니다.
-
-문제는 GET이 POST보다 늦게 응답하면, 증가 전 카운트로 state가 덮어써지는 경우가 생긴다는 거예요.
-
-`postRespondedRef` 플래그 하나로 간단히 해결했습니다.  
-POST가 먼저 응답했다면 GET 결과는 무시하는 방식입니다.
-
-```ts
-// GET effect
-if (!postRespondedRef.current) {
-    setTotalViews(payload.totalViews);
-}
-
-// POST track()
-postRespondedRef.current = true;
-setTotalViews(payload.stats.totalViews);
-```
-
-# TO-DO
-
-- [x] 공통 렌더링 블록 컴포넌트로 분리
-    - <a href="https://spec.commonmark.org/current/" target="_blank">CommonMark</a>
-        - [x] Thematic breaks
-        - [x] ATX headings
-        - [x] Paragraphs
-        - [x] Block quotes
-        - [x] Lists
-        - [x] Code spans
-        - [x] Links
-        - [x] Images
-        - [x] Autolinks
-    - <a href="https://github.github.com/gfm/" target="_blank">GFM(GitHub Flavored Markdown)</a>
-        - [x] Tables
-        - [x] Task list items
-        - [x] Strikethrough
-        - [x] Autolinks
-- [x] CodeSandbox 블록
-- [x] TOC(Table of Contents) 사이드바
-- [x] 검색
-- [x] 방문자 수
-- [ ] 댓글
-- [ ] 그래프 뷰
-- [ ] 에디터
+자세한 작업 루틴은 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고합니다.

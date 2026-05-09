@@ -1,0 +1,155 @@
+.comments {
+    margin-top: 4rem;
+    border-top: 1px solid var(--gray-5);
+    padding: 2rem 0 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.replyForm {
+    margin: 0.75rem 0 0 1.25rem;
+}
+
+.formActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.error {
+    color: var(--red-11);
+}
+
+.empty {
+    border: 1px solid var(--gray-5);
+    padding: 1rem;
+    color: var(--gray-11);
+}
+
+.list {
+    display: grid;
+    gap: 1rem;
+}
+
+.thread {
+    display: grid;
+    gap: 0;
+}
+
+.comment {
+    border: 1px solid var(--gray-5);
+    padding: 1rem;
+}
+
+.commentHeader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.content {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+}
+
+.commentActions {
+    margin-top: 0.75rem;
+}
+
+.replies {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.replyRow {
+    display: flex;
+    align-items: stretch;
+    margin-left: 1.25rem;
+}
+
+.replyRow:is(:hover, :focus-within) .branch {
+    color: var(--accent-a8);
+}
+
+.branch {
+    position: relative;
+    display: block;
+    width: 1.25rem;
+    flex-shrink: 0;
+    color: var(--gray-a6);
+    transition: color 150ms ease;
+}
+
+.branchStem {
+    position: absolute;
+    left: 50%;
+    display: block;
+    width: 0.25rem;
+    transform: translateX(-50%);
+    background-color: currentColor;
+}
+
+.branchStemFull {
+    top: 0;
+    bottom: 0;
+}
+
+.branchStemHalf {
+    top: 0;
+    bottom: calc(50% - 2px);
+}
+
+.branchHorizontal {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: calc(50% - 2px);
+    display: block;
+    height: 0.25rem;
+    transform: translateY(-50%);
+    background-color: currentColor;
+}
+
+.replyRow > .comment,
+.replyForm {
+    flex: 1;
+    min-width: 0;
+    margin-top: 0.75rem;
+}
+
+@media screen and (max-width: 640px) {
+    .header,
+    .formActions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .replyRow {
+        margin-left: 0;
+    }
+}
